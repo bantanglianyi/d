@@ -1,0 +1,157 @@
+C251 COMPILER V5.60.0,  main                                                               16/06/23  16:29:10  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE main.c LARGE INTR2 BROWSE DEBUG PRINT(.\Listings\main.lst) OBJECT(.\Ob
+                    -jects\main.obj) 
+
+stmt  level    source
+
+    1          #include "MPU6050.H"
+    2          #include "oled.h"
+    3          #include "config.h"
+    4          #include "math.h"
+    5          #include <stdio.h>
+    6          
+    7          /////////////////////////////////////////////////////////////////////////////////////////////////////////
+             -/////////
+    8          u8              edata   tp[16];         //读MP6050缓冲
+    9          u8       x_https[50];
+   10          u8       y_https[50];
+   11          u8       z_https[50];
+   12          
+   13          int             edata g_x=0,g_y=0,g_z=0;                                        //陀螺仪矫正参数
+   14          float   edata a_x=0,a_y=0;                                                      //角度矫正参数
+   15          
+   16          float   edata AngleX=0,AngleY=0,AngleZ=0;                                       //四元数解算出的欧拉角
+   17          float   edata Angle_gx=0,Angle_gy=0,Angle_gz=0;         //由角速度计算的角速率(角度制)
+   18          float   edata Angle_ax=0,Angle_ay=0,Angle_az=0;         //由加速度计算的加速度(弧度制)
+   19          float edata Out_PID_X=0,Last_Angle_gx=0;
+   20          float edata Out_PID_Y=0,Last_Angle_gy=0;
+   21          ////////////////////////////////////////////////////////
+   22          #define pi              3.14159265f                           
+   23          #define Kp              0.8f                        
+   24          #define Ki              0.001f                         
+   25          #define halfT   0.004f           
+   26          
+   27          float edata q0=1,q1=0,q2=0,q3=0;   
+   28          float edata exInt=0,eyInt=0,ezInt=0;  
+   29          
+   30          
+   31          
+   32          void IMUupdate(float gx, float gy, float gz, float ax, float ay, float az)
+   33          {
+   34   1              float edata norm;
+   35   1              float edata vx, vy, vz;
+   36   1              float edata ex, ey, ez;
+   37   1      
+   38   1              norm = sqrt(ax*ax + ay*ay + az*az);     //把加速度计的三维向量转成单维向量   
+   39   1              ax = ax / norm;
+   40   1              ay = ay / norm;
+   41   1              az = az / norm;
+   42   1      
+   43   1                      //      下面是把四元数换算成《方向余弦矩阵》中的第三列的三个元素。 
+   44   1                      //      根据余弦矩阵和欧拉角的定义，地理坐标系的重力向量，转到机体坐标系，正好是这三个元素
+   45   1                      //      所以这里的vx vy vz，其实就是当前的欧拉角（即四元数）的机体坐标参照系上，换算出来的
+   46   1                      //      重力单位向量。
+   47   1              vx = 2*(q1*q3 - q0*q2);
+   48   1              vy = 2*(q0*q1 + q2*q3);
+   49   1              vz = q0*q0 - q1*q1 - q2*q2 + q3*q3 ;
+   50   1      
+   51   1              ex = (ay*vz - az*vy) ;
+   52   1              ey = (az*vx - ax*vz) ;
+   53   1              ez = (ax*vy - ay*vx) ;
+   54   1      
+   55   1              exInt = exInt + ex * Ki;
+   56   1              eyInt = eyInt + ey * Ki;
+   57   1              ezInt = ezInt + ez * Ki;
+C251 COMPILER V5.60.0,  main                                                               16/06/23  16:29:10  PAGE 2   
+
+   58   1      
+   59   1              gx = gx + Kp*ex + exInt;
+   60   1              gy = gy + Kp*ey + eyInt;
+   61   1              gz = gz + Kp*ez + ezInt;
+   62   1      
+   63   1              q0 = q0 + (-q1*gx - q2*gy - q3*gz) * halfT;
+   64   1              q1 = q1 + ( q0*gx + q2*gz - q3*gy) * halfT;
+   65   1              q2 = q2 + ( q0*gy - q1*gz + q3*gx) * halfT;
+   66   1              q3 = q3 + ( q0*gz + q1*gy - q2*gx) * halfT;
+   67   1      
+   68   1              norm = sqrt(q0*q0 + q1*q1 + q2*q2 + q3*q3);
+   69   1              q0 = q0 / norm;
+   70   1              q1 = q1 / norm;
+   71   1              q2 = q2 / norm;
+   72   1              q3 = q3 / norm;
+   73   1      
+   74   1      
+   75   1              AngleZ= atan2(2 * q1 * q2 + 2 * q0 * q3, -2 * q2*q2 - 2 * q3* q3 + 1)* 57.2957795f; // yaw 
+   76   1              AngleY= asin(-2 * q1 * q3 + 2 * q0* q2)* 57.2957795f; // pitch 
+   77   1              AngleX= atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2* q2 + 1)* 57.2957795f; // roll
+   78   1      }
+   79          
+   80          
+   81          void main()
+   82          {
+   83   1              P4M0 = 0xff; P4M1 = 0x00; 
+   84   1              P2M0 = 0x00; P2M1 = 0x00; 
+   85   1              InitMPU6050();
+   86   1              OLED_Init();
+   87   1      
+   88   1              while(1)
+   89   1              {
+   90   2              
+   91   2                                      Read_MPU6050(tp);       // 720us @24MHz
+   92   2                                      Angle_ax = ((float)(((int *)&tp)[0])) / 8192.0; //加速度处理    结果单位是 +- g
+   93   2                                      Angle_ay = ((float)(((int *)&tp)[1])) / 8192.0; //转换关系      8192 LSB/g, 1g对应读数8192
+   94   2                                      Angle_az = ((float)(((int *)&tp)[2])) / 8192.0; //加速度量程 +-4g/S
+   95   2                                      Last_Angle_gx = Angle_gx;               //储存上一次角速度数据
+   96   2                                      Last_Angle_gy = Angle_gy;
+   97   2                                      Angle_gx = ((float)(((int *)&tp)[4] - g_x)) / 65.5;     //陀螺仪处理    结果单位是 +-度
+   98   2                                      Angle_gy = ((float)(((int *)&tp)[5] - g_y)) / 65.5;     //陀螺仪量程 +-500度/S, 1度/秒 对应读数 65.536
+   99   2                                      Angle_gz = ((float)(((int *)&tp)[6] - g_z)) / 65.5;     //转换关系65.5 LSB/度
+  100   2                                      IMUupdate(Angle_gx*0.0174533f, Angle_gy*0.0174533f, Angle_gz*0.0174533f, Angle_ax,Angle_ay,Angle_az);
+             -        // 0.8~1.0ms @24MHz    
+  101   2                                      sprintf(x_https,"x:%.3f",AngleX);
+  102   2                                      OLED_ShowString(0,0,x_https,8);
+  103   2                                      sprintf(y_https,"y:%.3f",AngleY);
+  104   2                                      OLED_ShowString(0,1,y_https,8);
+  105   2                                      sprintf(z_https,"z:%.3f",AngleZ);
+  106   2                                      OLED_ShowString(0,2,z_https,8);
+  107   2                      
+  108   2      
+  109   2              }
+  110   1      }
+  111          
+  112          
+  113          
+  114          
+  115          
+  116          
+  117          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =      2094     ------
+  ecode size           =    ------     ------
+C251 COMPILER V5.60.0,  main                                                               16/06/23  16:29:10  PAGE 3   
+
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =       210         20
+  xdata-const size     =    ------     ------
+  edata size           =        50          4
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =       231     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

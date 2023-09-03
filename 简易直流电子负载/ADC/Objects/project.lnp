@@ -1,0 +1,8 @@
+".\Objects\main.obj",
+".\Objects\oled.obj",
+".\Objects\ADC.obj",
+".\Objects\USART.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.map") CASE 
+CLASSES (EDATA (0x0-0xFFF), 
+HDATA (0x0-0xFFF)) 

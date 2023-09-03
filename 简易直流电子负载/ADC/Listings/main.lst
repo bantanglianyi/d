@@ -1,0 +1,103 @@
+C251 COMPILER V5.60.0,  main                                                               13/07/23  00:12:39  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE main.c LARGE INTR2 ROM(HUGE) BROWSE DEBUG PRINT(.\Listings\main.lst) O
+                    -BJECT(.\Objects\main.obj) 
+
+stmt  level    source
+
+    1          #include <STC32G.H>
+    2          #include "oled.H"
+    3          #include "ADC.h"
+    4          #include <stdio.h>
+    5          #include "USART.h"
+    6          #define N 100
+    7          float ADC_1,ADC_15;
+    8          float ADC_out_1;
+    9          float ADC_out_filter;
+   10          unsigned int value_buf[N];
+   11          
+   12          void Delay10us();
+   13          void Delay100us();              //@11.0592MHz
+   14          float filter3();
+   15          
+   16          void main()
+   17          {
+   18   1      //      P4M0 = 0xff; 
+   19   1      //      P4M1 = 0x00; 
+   20   1              OLED_Init();
+   21   1              ADC_init();
+   22   1              UartInit();
+   23   1              while(1)
+   24   1              {
+   25   2                      ADC_15=Get_ADC12bitResult(15);
+   26   2                      ADC_1=Get_ADC12bitResult(1);
+   27   2                      ADC_out_1=(float)(1.18301*ADC_1/ADC_15);
+   28   2                      ADC_out_filter=filter3();
+   29   2                      printf("%.4f\n",ADC_out_filter);
+   30   2                      Delay100us();
+   31   2                      
+   32   2              }
+   33   1      }
+   34          void Delay100us()               //@11.0592MHz
+   35          {
+   36   1              unsigned long edata d;
+   37   1      
+   38   1              _nop_();
+   39   1              d = 275UL;
+   40   1              while (d) d--;
+   41   1      }
+   42          void Delay10us()                //@11.0592MHz
+   43          {
+   44   1              unsigned long edata c;
+   45   1      
+   46   1              _nop_();
+   47   1              _nop_();
+   48   1              c = 26UL;
+   49   1              while (c) c--;
+   50   1      }
+   51          float filter3()
+   52          {
+   53   1              float sum = 0;
+   54   1              int count,a;
+   55   1              for ( count=0;count<N;count++)
+   56   1              {
+   57   2                      sum = sum+ ADC_out_1;
+   58   2                      a++;
+C251 COMPILER V5.60.0,  main                                                               13/07/23  00:12:39  PAGE 2   
+
+   59   2                      if(a==255) a=0;
+   60   2              }
+   61   1              return (sum/N);
+   62   1      }
+   63           
+   64          
+   65          
+   66          
+   67          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =    ------     ------
+  ecode size           =       223     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =       216     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =         6     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

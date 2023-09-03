@@ -1,0 +1,10 @@
+".\Objects\main.obj",
+".\Objects\USART.obj",
+".\Objects\Soft_I2C.obj",
+".\Objects\MPU6050.obj",
+".\Objects\DMP.obj",
+".\Objects\oled.obj" 
+TO ".\Objects\printf" 
+PRINT(".\Listings\printf.map") CASE 
+CLASSES (EDATA (0x0-0xFFF), 
+HDATA (0x0-0xFFF)) 

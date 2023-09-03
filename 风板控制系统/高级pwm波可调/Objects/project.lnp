@@ -1,0 +1,7 @@
+".\Objects\mian.obj",
+".\Objects\Soft_I2C.obj",
+".\Objects\pwm.obj" 
+TO ".\Objects\project" 
+PRINT(".\Listings\project.map") CASE 
+CLASSES (EDATA (0x0-0xFFF), 
+HDATA (0x0-0xFFF)) 

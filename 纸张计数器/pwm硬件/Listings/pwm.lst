@@ -1,0 +1,63 @@
+C251 COMPILER V5.60.0,  pwm                                                                31/05/23  14:15:56  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE pwm
+OBJECT MODULE PLACED IN .\Objects\pwm.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE pwm.c INTR2 BROWSE DEBUG PRINT(.\Listings\pwm.lst) OBJECT(.\Objects\pw
+                    -m.obj) 
+
+stmt  level    source
+
+    1          
+    2          #include "pwm.h"
+    3          #define ARR 2
+    4          #define CCR 1
+    5          void pwm_Init()
+    6          {
+    7   1      PWMA_PSCRH=0;
+    8   1       PWMA_PSCRL=0;
+    9   1       
+   10   1       PWMA_ARRH = (u8)(ARR>>8);
+   11   1       PWMA_ARRL = (u8)(ARR);
+   12   1       
+   13   1       PWMA_CCR1H=(u8)(CCR>>8);
+   14   1       PWMA_CCR1L=(u8)(CCR);
+   15   1       
+   16   1       PWMA_ENO=0X00;
+   17   1       PWMA_ENO|=0X01;
+   18   1       
+   19   1       PWMA_PS=0X00;
+   20   1       PWMA_PS|=(1<<0);
+   21   1       
+   22   1       PWMA_CCER1=0X00;
+   23   1       PWMA_CCMR1=0X68;
+   24   1       PWMA_CCER1=0X01;
+   25   1       
+   26   1       PWMA_BKR=0X80;
+   27   1       
+   28   1       PWMA_CR1|=0X01;
+   29   1       }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       132     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

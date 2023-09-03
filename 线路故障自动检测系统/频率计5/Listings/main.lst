@@ -1,0 +1,278 @@
+C251 COMPILER V5.60.0,  main                                                               03/08/23  19:28:17  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE main.c LARGE INTR2 BROWSE DEBUG PRINT(.\Listings\main.lst) OBJECT(.\Ob
+                    -jects\main.obj) 
+
+stmt  level    source
+
+    1          #include <STC32G.H>
+    2          #include "oled.h"
+    3          #include <stdio.h>
+    4          #include "ADC.h"
+    5          #include "key_multi.h"
+    6          #include "USART.h"
+    7          #define u8 unsigned char
+    8          #define u16 unsigned int
+    9          #define u32 unsigned long
+   10          char a=0;
+   11          u16 b=500;
+   12          double f=0;
+   13          u16 TH1_NOW,TL1_NOW;
+   14          char c,TF1_NOW=0;
+   15          float ADC_1,ADC_15;
+   16          float ADC_out_1;
+   17          u8 Key1_nums,Key2_nums,Key3_nums,Key4_nums;             //KEY1双击次数，KEY2双击次数，KEY3双击次数，KEY4双击次数
+   18          u8 keyvalue;            //键值
+   19          char count_mode=1;
+   20          double f_1=0;
+   21          void Timer1_Init(void)          //2毫秒@24.000MHz  计数器
+   22          {
+   23   1              TMOD &= 0x0F;                   //设置定时器模式
+   24   1              TMOD |= 0x50;                   //设置定时器模式
+   25   1              TL1 = 0;                                //设置定时初始值
+   26   1              TH1 = 0;                                //设置定时初始值
+   27   1              TF1 = 0;                                //清除TF1标志
+   28   1              TR1 = 1;                                //定时器0开始计时
+   29   1              ET1 = 1;                                //使能定时器1中断
+   30   1              
+   31   1      }
+   32          void Timer0_Isr(void) interrupt 1
+   33          {
+   34   1                      if(b--==0)
+   35   1                      {
+   36   2                              TF1_NOW=c;
+   37   2                              c=0;
+   38   2                              b=500;
+   39   2                              TH1_NOW=TH1;
+   40   2                              TL1_NOW=TL1;
+   41   2                              TH1=0;
+   42   2                              TL1=0;  
+   43   2                              f=(float)((((TH1_NOW<<8)+TL1_NOW)+(TF1_NOW*65535))*1.00145621805);
+   44   2                      }       
+   45   1      }
+   46          void Timer1_Isr(void) interrupt 3
+   47          {
+   48   1              c++;
+   49   1      }
+   50          
+   51          void Timer0_Init(void)          //2毫秒@24.000MHz
+   52          {
+   53   1              AUXR |= 0x80;                   //定时器时钟1T模式
+   54   1              TMOD &= 0xF0;                   //设置定时器模式
+   55   1              TL0 = 0x80;                             //设置定时初始值
+   56   1              TH0 = 0x44;                             //设置定时初始值
+   57   1              TF0 = 0;                                //清除TF0标志
+   58   1              TR0 = 1;                                //定时器0开始计时
+C251 COMPILER V5.60.0,  main                                                               03/08/23  19:28:17  PAGE 2   
+
+   59   1              ET0 = 1;                                //使能定时器0中断
+   60   1              PT1H=1;
+   61   1              PT1=1;
+   62   1      }
+   63          void Delay100us()               //@11.0592MHz
+   64          {
+   65   1              unsigned long edata d;
+   66   1      
+   67   1              _nop_();
+   68   1              d = 275UL;
+   69   1              while (d) d--;
+   70   1      }
+   71          void display_autograph()
+   72          {
+   73   1                      OLED_ShowChinese(0,0,0,16);
+   74   1                      OLED_ShowChinese(16,0,1,16);
+   75   1                      OLED_ShowChinese(32,0,2,16);
+   76   1                      OLED_ShowChinese(48,0,3,16);
+   77   1                      OLED_ShowChinese(64,0,4,16);
+   78   1                      OLED_ShowChinese(80,0,5,16);
+   79   1                      OLED_ShowChinese(96,0,6,16);
+   80   1                      OLED_ShowChinese(112,0,7,16);
+   81   1                      OLED_ShowChinese(0,2,8,16);
+   82   1                      OLED_ShowChinese(16,2,9,16);
+   83   1      }
+   84          void ADC_AD637()
+   85          {
+   86   1                      ADC_15=Get_ADC12bitResult(15);
+   87   1                      ADC_1=Get_ADC12bitResult(1);
+   88   1                      ADC_out_1=(float)(1.18301*ADC_1/ADC_15);
+   89   1                      Delay100us();
+   90   1      }
+   91          void display_judge()
+   92          {       
+   93   1                                              ADC_AD637();
+   94   1                                              printf("%f\r\n",ADC_out_1);
+   95   1                                              f_1=f;
+   96   1                                              OLED_ShowChinese(0,0,12,16);//故
+   97   1                                              OLED_ShowChinese(16,0,13,16);//障
+   98   1                                              OLED_ShowChinese(32,0,6,16);//检
+   99   1                                              OLED_ShowChinese(48,0,7,16);//测
+  100   1                                              if(P24 == 0)
+  101   1                                              {
+  102   2                                                      
+  103   2                                                      delay_ms(20);
+  104   2                                                      while(P24 == 0);
+  105   2                                                      delay_ms(20);
+  106   2                                              OLED_Clear();                                           
+  107   2                                              if(f_1>53070&&f_1<54000)
+  108   2                                              {
+  109   3                                                      a=1;
+  110   3                                                      
+  111   3                                              }               
+  112   2                                              else if(f_1>453000&&f_1<500000)
+  113   2                                              {
+  114   3                                                      a=2;
+  115   3                                              }
+  116   2                                              else if(f_1>101500&&f_1<103000)
+  117   2                                              {
+  118   3                                                      a =3;
+  119   3                                              }
+  120   2                                              else if(f_1>58500&&f_1<59700)
+  121   2                                              {
+  122   3                                                      a=4;
+  123   3                                              }
+  124   2                                              else if(f_1>610000)
+C251 COMPILER V5.60.0,  main                                                               03/08/23  19:28:17  PAGE 3   
+
+  125   2                                              {
+  126   3                                                      a=5;
+  127   3                                              }
+  128   2                                              else if(f_1>87700&&f_1<88800)
+  129   2                                              {
+  130   3                                                      a=6;
+  131   3                                              }
+  132   2                                              else if(f_1>84200&&f_1<86300)
+  133   2                                              {
+  134   3                                                      a=7;
+  135   3                                              }
+  136   2      //                                      else if(f_1>58500&&f_1<58600)
+  137   2      //                                      {
+  138   2      //                                              a=8;
+  139   2      //                                      }
+  140   2                                              
+  141   2                                      }
+  142   1                                              switch(a)
+  143   1                                              {
+  144   2                                                      case 1:
+  145   2                                                              OLED_ShowChinese(32,2,16,16);//没
+  146   2                                                              OLED_ShowChinese(48,2,17,16);//有
+  147   2                                                              OLED_ShowChinese(64,2,12,16);//故
+  148   2                                                              OLED_ShowChinese(80,2,13,16);//障
+  149   2                                                      break;
+  150   2                                                      case 2:
+  151   2                                                              OLED_ShowString(16,2,"L1",16);
+  152   2                                                              OLED_ShowChinese(32,2,10,16);//开
+  153   2                                                              OLED_ShowChinese(48,2,11,16);//路
+  154   2                                                      break;
+  155   2                                                      case 3:
+  156   2                                                              OLED_ShowString(16,2,"L2",16);
+  157   2                                                              OLED_ShowChinese(32,2,10,16);//开
+  158   2                                                              OLED_ShowChinese(48,2,11,16);//路
+  159   2                                                      break;
+  160   2                                                      case 4:
+  161   2                                                              OLED_ShowString(16,2,"L3",16);
+  162   2                                                              OLED_ShowChinese(32,2,10,16);//开
+  163   2                                                              OLED_ShowChinese(48,2,11,16);//路
+  164   2                                                      break;
+  165   2                                                      case 5:
+  166   2                                                              OLED_ShowString(16,2,"C1",16);
+  167   2                                                              OLED_ShowChinese(32,2,10,16);//开
+  168   2                                                              OLED_ShowChinese(48,2,11,16);//路
+  169   2                                                      break;
+  170   2                                                      case 6:
+  171   2                                                              OLED_ShowString(16,2,"C2",16);
+  172   2                                                              OLED_ShowChinese(32,2,10,16);//开
+  173   2                                                              OLED_ShowChinese(48,2,11,16);//路
+  174   2                                                      break;
+  175   2                                                      case 7:
+  176   2                                                              OLED_ShowString(16,2,"C3",16);
+  177   2                                                              OLED_ShowChinese(32,2,10,16);//开
+  178   2                                                              OLED_ShowChinese(48,2,11,16);//路
+  179   2                                                      break;
+  180   2                                                      case 8:
+  181   2                                                              OLED_ShowString(16,2,"C4",16);
+  182   2                                                              OLED_ShowChinese(32,2,10,16);//开
+  183   2                                                              OLED_ShowChinese(48,2,11,16);//路       
+  184   2                                                      break;
+  185   2                                                      
+  186   2                                              }
+  187   1                              
+  188   1                                              
+  189   1      //              sprintf(zp,"%.3f",f_1);
+  190   1                      
+C251 COMPILER V5.60.0,  main                                                               03/08/23  19:28:17  PAGE 4   
+
+  191   1                      //OLED_ShowString(2,2,zp,8);
+  192   1                      //delay_ms(1000);       
+  193   1      }
+  194                  
+  195          void main()
+  196          {
+  197   1              EA=1;
+  198   1      
+  199   1              XOSCCR=0xc4;
+  200   1              while(XOSCCR&1);
+  201   1              CLKDIV=0X00;
+  202   1              CLKSEL=0X01;
+  203   1              
+  204   1              EAXFR=1;
+  205   1              CKCON=0X00;
+  206   1              WTST=0X00;
+  207   1      
+  208   1              P3M0 = 0x00; P3M1 = 0x20; 
+  209   1              P2M0 = 0xff; P2M1 = 0x00; 
+  210   1              P4M0 = 0XFF; P4M1 = 0X00;
+  211   1              OLED_Init();
+  212   1              Timer0_Init();
+  213   1              Timer1_Init();
+  214   1              UartInit();
+  215   1              ADC_init();
+  216   1              while(1)
+  217   1              {
+  218   2                      switch(count_mode)
+  219   2                      {
+  220   3                              case 0:display_autograph();break;
+  221   3                              case 1:display_judge();break;
+  222   3                      }
+  223   2                      if(P23 == 0)
+  224   2                      {
+  225   3                  delay_ms(20); 
+  226   3                              while(P23 == 0)
+  227   3                              delay_ms(20);   
+  228   3                              count_mode++;
+  229   3                              OLED_Clear();
+  230   3                              if(count_mode>=2)
+  231   3                              {
+  232   4                                      count_mode=0;
+  233   4                              }
+  234   3                      }                               
+  235   2              }
+  236   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =      1398     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =        35     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        69     ------
+End of Module Information.
+
+C251 COMPILER V5.60.0,  main                                                               03/08/23  19:28:17  PAGE 5   
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

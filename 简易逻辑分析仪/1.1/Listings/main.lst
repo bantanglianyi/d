@@ -1,0 +1,90 @@
+C251 COMPILER V5.60.0,  main                                                               18/07/23  20:18:08  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE main.c LARGE INTR2 BROWSE DEBUG PRINT(.\Listings\main.lst) OBJECT(.\Ob
+                    -jects\main.obj) 
+
+stmt  level    source
+
+    1          #include <STC32G.H>
+    2          #include "pwm.h"
+    3          unsigned int PWM1_Duty;//高点平的持续时间，用于改变占空比
+    4          unsigned int PWM2_Duty;
+    5          unsigned int PWM3_Duty;
+    6          unsigned int PWM4_Duty;
+    7          char count=0;
+    8          bit INT0_judge=1;
+    9          void Delay3us()         //@20.000MHz
+   10          {
+   11   1              unsigned long edata h;
+   12   1      
+   13   1              _nop_();
+   14   1              _nop_();
+   15   1              _nop_();
+   16   1              h = 13UL;
+   17   1              while (h) h--;
+   18   1      }
+   19          
+   20          void main()
+   21          {
+   22   1              
+   23   1              EAXFR = 1;                              // 使能访问XFR
+   24   1              CKCON = 0x00;                   // 设置外部数据总线为最快
+   25   1              WTST = 0;  
+   26   1              
+   27   1              PWM1_Duty=25;
+   28   1                      
+   29   1              P6M0 = 0x00; 
+   30   1              P6M1 = 0x00; 
+   31   1              
+   32   1              P6=0X05;
+   33   1              
+   34   1              PWMA_Init();
+   35   1              UpdatePwm();
+   36   1              
+   37   1              IT0 = 1;      
+   38   1              EX0 = 1;      //打开外部中断1
+   39   1              EA=1;
+   40   1              
+   41   1              
+   42   1              //UpdatePwm();
+   43   1              while(1)
+   44   1              {
+   45   2                      
+   46   2                      
+   47   2              }
+   48   1      }
+   49          
+   50          void INT0_Routine() interrupt 0
+   51          {
+   52   1                      P6=_cror_(P6,1);
+   53   1      }
+   54          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =        73     ------
+C251 COMPILER V5.60.0,  main                                                               18/07/23  20:18:08  PAGE 2   
+
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =         9     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =         1     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =         6     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

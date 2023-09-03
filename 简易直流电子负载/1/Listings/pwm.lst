@@ -1,0 +1,169 @@
+C251 COMPILER V5.60.0,  pwm                                                                09/07/23  18:06:21  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE pwm
+OBJECT MODULE PLACED IN .\Objects\pwm.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE pwm.c LARGE INTR2 BROWSE DEBUG PRINT(.\Listings\pwm.lst) OBJECT(.\Obje
+                    -cts\pwm.obj) 
+
+stmt  level    source
+
+    1          /*---------------------------------------------------------------------*/
+    2          /* --- STC MCU Limited ------------------------------------------------*/
+    3          /* --- STC 1T Series MCU Demo Programme -------------------------------*/
+    4          /* --- Mobile: (86)13922805190 ----------------------------------------*/
+    5          /* --- Fax: 86-0513-55012956,55012947,55012969 ------------------------*/
+    6          /* --- Tel: 86-0513-55012928,55012929,55012966 ------------------------*/
+    7          /* --- Web: www.STCMCU.com --------------------------------------------*/
+    8          /* --- Web: www.STCMCUDATA.com  ---------------------------------------*/
+    9          /* --- QQ:  800003751 -------------------------------------------------*/
+   10          /* 如果要在程序中使用此代码,请在程序中注明使用了STC的资料及程序            */
+   11          /*---------------------------------------------------------------------*/
+   12          
+   13          /*************  功能说明    **************
+   14          
+   15          本例程基于STC32G为主控芯片的实验箱进行编写测试。
+   16          
+   17          使用Keil C251编译器，Memory Model推荐设置XSmall模式，默认定义变量在edata，单时钟存取访问速度快。
+   18          
+   19          edata建议保留1K给堆栈使用，空间不够时可将大数组、不常用变量加xdata关键字定义到xdata空间。
+   20          
+   21          高级PWM定时器 PWM1P/PWM1N,PWM2P/PWM2N,PWM3P/PWM3N,PWM4P/PWM4N 每个通道都可独立实现PWM输出，或者两两互补对
+             -称输出.
+   22          
+   23          8个通道PWM设置对应P6的8个端口.
+   24          
+   25          通过P6口上连接的8个LED灯，利用PWM实现呼吸灯效果.
+   26          
+   27          PWM周期和占空比可以根据需要自行设置，最高可达65535.
+   28          
+   29          下载时, 选择时钟 24MHz (用户可自行修改频率).
+   30          
+   31          ******************************************/
+   32          
+   33          #include "pwm.h"
+   34          
+   35          #define PWM_PSC                 (12 - 1)        //240分频
+   36          //****************************** 用户定义宏 ***********************************/
+   37          
+   38          
+   39          #define PWM1_0      0x00        //P:P1.0  N:P1.1
+   40          #define PWM1_1      0x01        //P:P2.0  N:P2.1
+   41          #define PWM1_2      0x02        //P:P6.0  N:P6.1
+   42          
+   43          #define PWM2_0      0x00        //P:P1.2/P5.4  N:P1.3
+   44          #define PWM2_1      0x04        //P:P2.2  N:P2.3
+   45          #define PWM2_2      0x08        //P:P6.2  N:P6.3
+   46          
+   47          #define PWM3_0      0x00        //P:P1.4  N:P1.5
+   48          #define PWM3_1      0x10        //P:P2.4  N:P2.5
+   49          #define PWM3_2      0x20        //P:P6.4  N:P6.5
+   50          
+   51          #define PWM4_0      0x00        //P:P1.6  N:P1.7
+   52          #define PWM4_1      0x40        //P:P2.6  N:P2.7
+   53          #define PWM4_2      0x80        //P:P6.6  N:P6.7
+   54          #define PWM4_3      0xC0        //P:P3.4  N:P3.3
+   55          
+   56          #define ENO1P       0x01
+   57          #define ENO1N       0x02
+C251 COMPILER V5.60.0,  pwm                                                                09/07/23  18:06:21  PAGE 2   
+
+   58          #define ENO2P       0x04
+   59          #define ENO2N       0x08
+   60          #define ENO3P       0x10
+   61          #define ENO3N       0x20
+   62          #define ENO4P       0x40
+   63          #define ENO4N       0x80
+   64          
+   65          /*****************************************************************************/
+   66          
+   67          
+   68          
+   69          
+   70          
+   71          /*************  本地变量声明    **************/
+   72          
+   73          
+   74          void PWMA_Init()
+   75          {
+   76   1              PWMA_PSCRH = (unsigned int)(PWM_PSC >> 8);
+   77   1              PWMA_PSCRL = (unsigned int)(PWM_PSC);   
+   78   1      
+   79   1      
+   80   1          PWMA_CCER1 = 0x00; //写 CCMRx 前必须先清零 CCxE 关闭通道
+   81   1          PWMA_CCER2 = 0x00;
+   82   1          PWMA_CCMR1 = 0x68; //通道模式配置
+   83   1          PWMA_CCMR2 = 0x68;
+   84   1          PWMA_CCMR3 = 0x68;
+   85   1          PWMA_CCMR4 = 0x68;
+   86   1          PWMA_CCER1 = 0x55; //配置通道输出使能和极性
+   87   1          PWMA_CCER2 = 0x55;
+   88   1      
+   89   1          PWMA_ARRH = (unsigned char)(PWM_PERIOD >> 8); //设置周期时间
+   90   1          PWMA_ARRL = (unsigned char)PWM_PERIOD;
+   91   1      
+   92   1      //    PWMA_ENO = 0x00;
+   93   1          PWMA_ENO |= ENO1P; //使能输出
+   94   1          PWMA_ENO |= ENO1N; //使能输出
+   95   1      //    PWMA_ENO |= ENO2P; //使能输出
+   96   1      //    PWMA_ENO |= ENO2N; //使能输出
+   97   1      //    PWMA_ENO |= ENO3P; //使能输出
+   98   1      //    PWMA_ENO |= ENO3N; //使能输出
+   99   1      //    PWMA_ENO |= ENO4P; //使能输出
+  100   1      //    PWMA_ENO |= ENO4N; //使能输出
+  101   1      
+  102   1          PWMA_PS = 0x00;  //高级 PWM 通道输出脚选择位
+  103   1              PWMA_PS |= PWM1_1 ; //选择 PWM1_2 通道
+  104   1              //PWMA_PS |= PWM2_1; //选择 PWM2_2 通道
+  105   1      //    PWMA_PS |= PWM3_2; //选择 PWM3_2 通道
+  106   1      //    PWMA_PS |= PWM4_2; //选择 PWM4_2 通道
+  107   1      
+  108   1          //PWMA_BKR = 0x80;  //使能主输出
+  109   1          PWMA_CR1 |= 0x81; //使能ARR预装载,开始计时
+  110   1      
+  111   1      }
+  112          
+  113          //========================================================================
+  114          // 函数: UpdatePwm(void)
+  115          // 描述: 更新PWM占空比. 
+  116          // 参数: none.
+  117          // 返回: none.
+  118          // 版本: V1.0, 2012-11-22
+  119          //========================================================================*/
+  120          void UpdatePwm(void)//PWMx_DUTY的值不要超过周期值
+  121          {
+  122   1          PWMA_CCR1H = (unsigned int)(PWM1_Duty >> 8); //设置占空比时间
+  123   1          PWMA_CCR1L = (unsigned int)(PWM1_Duty);
+C251 COMPILER V5.60.0,  pwm                                                                09/07/23  18:06:21  PAGE 3   
+
+  124   1      //    PWMA_CCR2H = (unsigned int)(PWM2_Duty >> 8); //设置占空比时间
+  125   1      //    PWMA_CCR2L = (unsigned int)(PWM2_Duty);
+  126   1      //    PWMA_CCR3H = (u8)(PWM3_Duty >> 8); //设置占空比时间
+  127   1      //    PWMA_CCR3L = (u8)(PWM3_Duty);
+  128   1      //    PWMA_CCR4H = (u8)(PWM4_Duty >> 8); //设置占空比时间
+  129   1      //    PWMA_CCR4L = (u8)(PWM4_Duty);
+  130   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       178     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

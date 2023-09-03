@@ -1,0 +1,157 @@
+C51 COMPILER V9.01   CKP                                                                   07/18/2018 13:30:51 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE CKP
+OBJECT MODULE PLACED IN ckp.OBJ
+COMPILER INVOKED BY: E:\keil4\C51\BIN\C51.EXE ckp.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "REG51.H"
+   2          #include "STDIO.H"
+   3          #include "CKP.H"
+   4          /*************** 用户定义参数 *****************************/
+   5          
+   6          #define MAIN_Fosc               22118400L       //define main clock             11059200L
+   7          
+   8          #define Baudrate1               9600            //define the baudrate, 如果使用BRT做波特率发生器,则波特率跟串口2一样
+   9                                                                                  //12T mode: 600~115200 for 22.1184MHZ, 300~57600 for 11.0592MHZ
+  10          
+  11          #define Baudrate2               19200           //define the baudrate2,
+  12                                                                                  //12T mode: 600~115200 for 22.1184MHZ, 300~57600 for 11.0592MHZ
+  13          
+  14          #define         BUF_LENTH       128             //定义串口接收缓冲长度
+  15          
+  16          /**********************************************************/
+  17          
+  18          
+  19          
+  20          
+  21          sfr AUXR1 = 0xA2;
+  22          sfr     AUXR  = 0x8E;
+  23          sfr S2CON = 0x9A;       //12C5A60S2双串口系列
+  24          sfr S2BUF = 0x9B;       //12C5A60S2双串口系列
+  25          sfr IE2   = 0xAF;       //STC12C5A60S2系列
+  26          sfr BRT   = 0x9C;
+  27          
+  28          unsigned char   uart1_wr;               //写指针
+  29          unsigned char   uart1_rd;               //读指针
+  30          unsigned char   xdata RX1_Buffer[BUF_LENTH];
+  31          bit             B_TI;
+  32          
+  33          unsigned char   uart2_wr;               //写指针
+  34          unsigned char   uart2_rd;               //读指针
+  35          unsigned char   xdata RX2_Buffer[BUF_LENTH];
+  36          bit             B_TI2;
+  37          
+  38          
+  39          /****************** 编译器自动生成，用户请勿修改 ************************************/
+  40          
+  41          #define T1_TimerReload  (256 - MAIN_Fosc / 192 / Baudrate1)                     //Calculate the timer1 reload value     at 12T mo
+             -de
+  42          #define BRT_Reload              (256 - MAIN_Fosc / 12 / 16 / Baudrate2)         //Calculate BRT reload value
+  43          
+  44          #define TimeOut1                (28800 / (unsigned long)Baudrate1 + 2)
+  45          #define TimeOut2                (28800 / (unsigned long)Baudrate2 + 2)
+  46          
+  47          #define TI2                             (S2CON & 0x02) != 0
+  48          #define RI2                             (S2CON & 0x01) != 0
+  49          #define CLR_TI2()               S2CON &= ~0x02
+  50          #define CLR_RI2()               S2CON &= ~0x01
+  51          
+  52          /**********************************************************/
+  53          
+  54          /******************** 本地函数声明 ***************/
+C51 COMPILER V9.01   CKP                                                                   07/18/2018 13:30:51 PAGE 2   
+
+  55          void    uart1_init(void);
+  56          void    uart2_init(void);
+  57          void    UART1_TxByte(unsigned char dat);
+  58          void    UART2_TxByte(unsigned char dat);
+  59          void    PrintString1(char  *puts);
+  60          void    PrintString2(unsigned char code *puts);
+  61          char    putchar(char c);
+  62          unsigned char x,h;
+  63          //extern int adc1,ci=0;
+  64          //extern char b=0,a=0,i=0;
+  65          //void Delay10ms(x)             //@11.0592MHz
+  66          //{
+  67          //      unsigned char i, j;
+  68          //      for(i=x;i>0;i--)
+  69          //              for(j=110;j>0;j--);
+  70          //}
+  71          
+  72          
+  73          
+  74          
+  75          void    UART1_TxByte(unsigned char dat)
+  76          {
+  77   1              B_TI = 0;
+  78   1              SBUF = dat;
+  79   1              while(!B_TI);
+  80   1              B_TI = 0;
+  81   1      }
+  82          
+  83          
+  84          void PrintString1(char  *puts)          //发送一串字符串
+  85          {
+  86   1          for (; *puts != 0;  puts++)  UART1_TxByte(*puts);   //遇到停止符0结束
+  87   1      }
+  88          
+  89          
+  90          
+  91          char putchar(char c)
+  92          {
+  93   1          UART1_TxByte(c);
+  94   1          return c;
+  95   1      }
+  96          
+  97          void    uart1_init(void)
+  98          {
+  99   1              PCON &= 0x7F;           //波特率不倍速
+ 100   1              SCON  = 0x50;           //8位数据,可变波特率
+ 101   1              AUXR |= 0x04;           //独立波特率发生器时钟为Fosc,即1T
+ 102   1              BRT   = 0xfa;           //设定独立波特率发生器重装值             0xFD 11晶振
+ 103   1              AUXR |= 0x01;           //串口1选择独立波特率发生器为波特率发生器
+ 104   1              AUXR |= 0x10;           //启动独立波特率发生器
+ 105   1              ES    = 1;
+ 106   1              EA    = 1;
+ 107   1      }
+ 108          
+ 109          
+ 110          
+ 111          /**********************************************/
+ 112          void UART0_RCV (void) interrupt 4
+ 113          {
+ 114   1              if(RI)
+ 115   1              {
+ 116   2                      RI = 0;
+C51 COMPILER V9.01   CKP                                                                   07/18/2018 13:30:51 PAGE 3   
+
+ 117   2                      RX1_Buffer[uart1_wr] = SBUF;
+ 118   2                      if(++uart1_wr >= BUF_LENTH)     uart1_wr = 0;
+ 119   2              }
+ 120   1      
+ 121   1              if(TI)
+ 122   1              {
+ 123   2                      TI = 0;
+ 124   2                      B_TI = 1;
+ 125   2              }
+ 126   1      }
+ 127          
+ 128          
+ 129          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    116    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    262    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

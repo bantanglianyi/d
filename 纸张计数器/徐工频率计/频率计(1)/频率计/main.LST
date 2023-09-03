@@ -1,0 +1,52 @@
+C51 COMPILER V9.01   MAIN                                                                  07/18/2018 13:30:51 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: E:\keil4\C51\BIN\C51.EXE main.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "MAIN.H" 
+   2          bit qie = 0;
+   3          char buf[60];
+   4          f32 hz=0.0,pl=0.0,zhoo=0.0;
+   5          extern f32 zhou;
+   6          extern u16 ds_w,wb_w;
+   7          extern u8 TL_0,TH_0;
+   8          void main()
+   9          {
+  10   1              uart1_init();   //串口初始化   
+  11   1              sprintf(buf,"CLS(0);CLS(0);CLS(0);\r\n");                  //清屏
+  12   1              PrintString1(buf);
+  13   1              init();                 //定时器初始化
+  14   1              while(1)
+  15   1              {  
+  16   2                              pl = 65535*ds_w+256*TH_0+TL_0;                                  //测周法
+  17   2                              //hz =(1842997/pl*wb_w);  //12T模式 上限122KHZ
+  18   2                              hz =(22115890/pl*wb_w);   //1T模式  上限220KHZ
+  19   2                              sprintf(buf,"DS32(330,0,'频率计',17);DS48(60,200,'频率:%3.4f HZ',17);\r\n",hz);            
+  20   2                              PrintString1(buf);
+  21   2                              if(hz>=221000)qie=1;
+  22   2      //              if(qie==1)
+  23   2      //              {
+  24   2      //                              zhoo = zhou/1000.0;
+  25   2      //                              sprintf(buf,"DS48(330,0,'频率计',17);DS32(20,120,'频率:%3.4f KHZ',17);\r\n",zhoo);                 
+  26   2      //                              PrintString1(buf);
+  27   2      //              }
+  28   2              }
+  29   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    262    ----
+   CONSTANT SIZE    =     83    ----
+   XDATA SIZE       =     72    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

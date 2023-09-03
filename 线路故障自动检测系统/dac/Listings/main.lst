@@ -1,0 +1,106 @@
+C251 COMPILER V5.60.0,  main                                                               04/08/23  17:46:47  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE main.c LARGE INTR2 ROM(HUGE) BROWSE DEBUG PRINT(.\Listings\main.lst) O
+                    -BJECT(.\Objects\main.obj) 
+
+stmt  level    source
+
+    1          #include <STC32G.H>
+    2          #include "pwm.h"
+    3          #define u8 unsigned char
+    4          #define u16 unsigned int
+    5          unsigned int PWM1_Duty=25;//高点平的持续时间，用于改变占空比
+    6          unsigned int PWM2_Duty;
+    7          unsigned int PWM3_Duty;
+    8          unsigned int PWM4_Duty;
+    9          //bit sine_flag = 0;
+   10          //u8 sine_time = 0;
+   11          //u16 sine_receive = 0;
+   12          //u8 sine_wave[100]={ 0x7F,0x87,0x8F,0x97,0x9F,0xA6,0xAE,0xB5,0xBC,0xC3,0xCA,0xD0,0xD6,0xDC,0xE1,0xE6
+   13          //,0xEB,0xEF,0xF2,0xF6,0xF8,0xFA,0xFC,0xFD,0xFE,0xFE,0xFE,0xFD,0xFC,0xFA,0xF8,0xF6
+   14          //,0xF2,0xEF,0xEB,0xE6,0xE1,0xDC,0xD6,0xD0,0xCA,0xC3,0xBC,0xB5,0xAE,0xA6,0x9F,0x97
+   15          //,0x8F,0x87,0x7F,0x77,0x6F,0x67,0x5F,0x58,0x50,0x49,0x42,0x3B,0x34,0x2E,0x28,0x22
+   16          //,0x1D,0x18,0x13,0x0F,0x0C,0x08,0x06,0x04,0x02,0x01,0x00,0x00,0x00,0x01,0x02,0x04
+   17          //,0x06,0x08,0x0C,0x0F,0x13,0x18,0x1D,0x22,0x28,0x2E,0x34,0x3B,0x42,0x49,0x50,0x58
+   18          //,0x5F,0x67,0x6F,0x77};
+   19          
+   20          //u16 i = 0;
+   21          //void Timer0_Isr() interrupt 1
+   22          //{
+   23          //      for(i=0;i<99;i++)
+   24          //      {
+   25          //              P6 = sine_wave[i];
+   26          //      }
+   27          //}
+   28            
+   29          //void Timer0_Init(void)                
+   30          //{
+   31          //      AUXR |= 0x80;                   //定时器时钟1T模式
+   32          //      TMOD &= 0xF0;                   //设置定时器模式
+   33          //      TL0 = 0xFA;                             //设置定时初始值
+   34          //      TH0 = 0xFF;                             //设置定时初始值
+   35          //      TF0 = 0;                                //清除TF0标志
+   36          //      TR0 = 1;                                //定时器0开始计时
+   37          //      ET0 = 1;                                //使能定时器0中断
+   38          //      EA = 1;
+   39          //}
+   40          
+   41          //void IO()
+   42          //{
+   43          //      P6M0 = 0XFF;
+   44          //      P6M1 = 0X00;
+   45          //}
+   46                  
+   47          void main()
+   48          {
+   49   1              EAXFR = 1;
+   50   1              CKCON = 0X00;
+   51   1              WTST = 0X00;
+   52   1              
+   53   1      //      IO();
+   54   1      //      Timer0_Init();
+   55   1              P0M0 = 0X00;
+   56   1              P0M1 = 0X00;
+   57   1              PWMA_Init();
+   58   1              UpdatePwm();
+C251 COMPILER V5.60.0,  main                                                               04/08/23  17:46:47  PAGE 2   
+
+   59   1              while(1)
+   60   1              {
+   61   2                      if(P07==0)
+   62   2                      {
+   63   3                                      PWMA_BKR=0x80;
+   64   3                      }
+   65   2                      else
+   66   2                      {
+   67   3                                      PWMA_BKR=0x00;
+   68   3                      }
+   69   2              }
+   70   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =    ------     ------
+  ecode size           =        47     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =         8     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =         7     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

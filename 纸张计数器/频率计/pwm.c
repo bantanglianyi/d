@@ -1,0 +1,29 @@
+
+#include "pwm.h"
+#define ARR 2
+#define CCR 1
+void pwm_Init()
+{
+PWMA_PSCRH=0;
+ PWMA_PSCRL=0;
+ 
+ PWMA_ARRH = (u8)(ARR>>8);
+ PWMA_ARRL = (u8)(ARR);
+ 
+ PWMA_CCR1H=(u8)(CCR>>8);
+ PWMA_CCR1L=(u8)(CCR);
+ 
+ PWMA_ENO=0X00;
+ PWMA_ENO|=0X01;
+ 
+ PWMA_PS=0X00;
+ PWMA_PS|=(1<<0);
+ 
+ PWMA_CCER1=0X00;
+ PWMA_CCMR1=0X68;
+ PWMA_CCER1=0X01;
+ 
+ PWMA_BKR=0X80;
+ 
+ PWMA_CR1|=0X01;
+ }

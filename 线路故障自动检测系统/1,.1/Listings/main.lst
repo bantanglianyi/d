@@ -1,0 +1,396 @@
+C251 COMPILER V5.60.0,  main                                                               04/08/23  02:29:44  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE main.c LARGE INTR2 ROM(HUGE) BROWSE DEBUG PRINT(.\Listings\main.lst) O
+                    -BJECT(.\Objects\main.obj) 
+
+stmt  level    source
+
+    1          #include <STC32G.H>
+    2          #include <stdio.h>
+    3          #include "oled.h"
+    4          #include "USART.H"
+    5          #include "key_multi.h"
+    6          #include "ADC.H"
+    7          /*程序频率为24Mhz*/
+    8          #define u8 unsigned char
+    9          #define u16 unsigned int
+   10          #define u32 unsigned long       
+   11          u8 Key1_nums,Key2_nums,Key3_nums,Key4_nums;             //KEY1双击次数，KEY2双击次数，KEY3双击次数，KEY4双击次数
+   12          u8 keyvalue;//键值
+   13          u16 b=500;//计数器计时
+   14          u16 TH1_NOW,TL1_NOW;//计数器高低位储存
+   15          u16 TF1_NOW=0;//计数器中转变量
+   16          char count_key=0;//频率电压采样转换
+   17          char c;//计数器溢出计数
+   18          float f;//频率计算最终取值
+   19          float f_1;
+   20          void Timer1_Init(void)          //2毫秒@24.000MHz  计数器
+   21          {
+   22   1              TMOD &= 0x0F;                   //设置定时器模式
+   23   1              TMOD |= 0x50;                   //设置定时器模式
+   24   1              TL1 = 0;                                //设置定时初始值
+   25   1              TH1 = 0;                                //设置定时初始值
+   26   1              TF1 = 0;                                //清除TF1标志
+   27   1              TR1 = 1;                                //定时器0开始计时
+   28   1              ET1 = 1;                                //使能定时器1中断
+   29   1              
+   30   1      }
+   31          void Timer0_Isr(void) interrupt 1
+   32          {
+   33   1                      if(b--==0)
+   34   1                      {
+   35   2                              TF1_NOW=c;
+   36   2                              c=0;
+   37   2                              b=500;
+   38   2                              TH1_NOW=TH1;
+   39   2                              TL1_NOW=TL1;
+   40   2                              TH1=0;
+   41   2                              TL1=0;  
+   42   2                              f=(float)((((TH1_NOW<<8)+TL1_NOW)+(TF1_NOW*65535))*1.00145621805);
+   43   2                      }
+   44   1                      
+   45   1                      
+   46   1      }
+   47          void Timer1_Isr(void) interrupt 3
+   48          {
+   49   1              c++;
+   50   1      }
+   51          
+   52          void Timer0_Init(void)          //2毫秒@24.000MHz
+   53          {
+   54   1              AUXR |= 0x80;                   //定时器时钟1T模式
+   55   1              TMOD &= 0xF0;                   //设置定时器模式
+   56   1              TL0 = 0x80;                             //设置定时初始值
+   57   1              TH0 = 0x44;                             //设置定时初始值
+   58   1              TF0 = 0;                                //清除TF0标志
+C251 COMPILER V5.60.0,  main                                                               04/08/23  02:29:44  PAGE 2   
+
+   59   1              TR0 = 1;                                //定时器0开始计时
+   60   1              ET0 = 1;                                //使能定时器0中断
+   61   1      }
+   62          
+   63          
+   64          
+   65          /*ADC延迟函数*/
+   66          //void Delay_ADC_100us()                
+   67          //{
+   68          //      unsigned long edata i;
+   69          
+   70          //      _nop_();
+   71          //      _nop_();
+   72          //      _nop_();
+   73          //      i = 598UL;
+   74          //      while (i) i--;
+   75          //}
+   76          ///*ADC调用函数
+   77          //返回值为采集电压*/
+   78          //float ADC_call_1()
+   79          //{
+   80          //      float ADC_1,ADC_15;//ADC通道储存变量
+   81          //      float ADC_out_1;//ADC通道一的最终储存
+   82          //      ADC_15=Get_ADC12bitResult(15);
+   83          //      ADC_1=Get_ADC12bitResult(1);
+   84          //      ADC_out_1=(float)(1.18301*ADC_1/ADC_15);
+   85          ////    printf("%.4f\n",ADC_out_filter);
+   86          //      Delay_ADC_100us();
+   87          //      return ADC_out_1;
+   88          //}
+   89          ///*错误判断,
+   90          //  输入值为采集频率
+   91          //  返回值错误编号*/
+   92          //char Frequency_judgment(float HZ,float U)
+   93          //{
+   94          //      char open_circuit_numbe;
+   95          //      switch(count_key)
+   96          //      {
+   97          //              case 0://频率
+   98          //              if(HZ>46100&&HZ<47000)
+   99          //              {
+  100          //                      open_circuit_numbe=1;
+  101          //                      
+  102          //              }               
+  103          //              else if(HZ>453000&&HZ<500000)
+  104          //              {
+  105          //                      open_circuit_numbe=2;
+  106          //              }
+  107          //              else if(HZ>101500&&HZ<103000)
+  108          //              {
+  109          //                      open_circuit_numbe=3;
+  110          //              }
+  111          //              else if(HZ>58500&&HZ<59700)
+  112          //              {
+  113          //                      open_circuit_numbe=4;
+  114          //              }
+  115          //              else if(HZ>610000)
+  116          //              {
+  117          //                      open_circuit_numbe=5;
+  118          //              }
+  119          //              else if(HZ>87700&&HZ<88800)
+  120          //              {
+  121          //                      open_circuit_numbe=6;
+  122          //              }
+  123          //              else if(HZ>84200&&HZ<86300)
+  124          //              {
+C251 COMPILER V5.60.0,  main                                                               04/08/23  02:29:44  PAGE 3   
+
+  125          //                      open_circuit_numbe=7;
+  126          //              }
+  127          //      //      else if(HZ>58500&&HZ<58600)
+  128          //      //      {
+  129          //      //              open_circuit_numbe=8;
+  130          //      //      }
+  131          //              break;
+  132          //                              
+  133          //              case 1://电压
+  134          //              if(U>53070&&U<54000)
+  135          //              {
+  136          //                      open_circuit_numbe=9;
+  137          //                      
+  138          //              }               
+  139          //              else if(U>453000&&U<500000)
+  140          //              {
+  141          //                      open_circuit_numbe=10;
+  142          //              }
+  143          //              else if(U>101500&&U<103000)
+  144          //              {
+  145          //                      open_circuit_numbe=11;
+  146          //              }
+  147          //              
+  148          //              break;
+  149          //      }
+  150          //      return open_circuit_numbe;
+  151          //}
+  152          
+  153          ///*故障编号判断*/
+  154          //void Fault_number()
+  155          //{
+  156          //      char malfunction_number;
+  157          //      malfunction_number=Frequency_judgment(f,ADC_call_1());
+  158          //      switch(malfunction_number)
+  159          //      {
+  160          //              case 1:
+  161          //                      OLED_ShowChinese(32,2,16,16);//没
+  162          //                      OLED_ShowChinese(48,2,17,16);//有
+  163          //                      OLED_ShowChinese(64,2,12,16);//故
+  164          //                      OLED_ShowChinese(80,2,13,16);//障
+  165          //              break;
+  166          //              case 2:
+  167          //                      OLED_ShowString(16,2,"L1",16);
+  168          //                      OLED_ShowChinese(32,2,10,16);//开
+  169          //                      OLED_ShowChinese(48,2,11,16);//路
+  170          //              break;
+  171          //              case 3:
+  172          //                      OLED_ShowString(16,2,"L2",16);
+  173          //                      OLED_ShowChinese(32,2,10,16);//开
+  174          //                      OLED_ShowChinese(48,2,11,16);//路
+  175          //              break;
+  176          //              case 4:
+  177          //                      OLED_ShowString(16,2,"L3",16);
+  178          //                      OLED_ShowChinese(32,2,10,16);//开
+  179          //                      OLED_ShowChinese(48,2,11,16);//路
+  180          //              break;
+  181          //              case 5:
+  182          //                      OLED_ShowString(16,2,"C1",16);
+  183          //                      OLED_ShowChinese(32,2,10,16);//开
+  184          //                      OLED_ShowChinese(48,2,11,16);//路
+  185          //              break;
+  186          //              case 6:
+  187          //                      OLED_ShowString(16,2,"C2",16);
+  188          //                      OLED_ShowChinese(32,2,10,16);//开
+  189          //                      OLED_ShowChinese(48,2,11,16);//路
+  190          //              break;
+C251 COMPILER V5.60.0,  main                                                               04/08/23  02:29:44  PAGE 4   
+
+  191          //              case 7:
+  192          //                      OLED_ShowString(16,2,"C3",16);
+  193          //                      OLED_ShowChinese(32,2,10,16);//开
+  194          //                      OLED_ShowChinese(48,2,11,16);//路
+  195          //              break;
+  196          //              case 8:
+  197          //                      OLED_ShowString(16,2,"C4",16);
+  198          //                      OLED_ShowChinese(32,2,10,16);//开
+  199          //                      OLED_ShowChinese(48,2,11,16);//路       
+  200          //              break;
+  201          //              case 9:
+  202          //                      OLED_ShowString(16,2,"L1",16);
+  203          //                      OLED_ShowChinese(32,2,18,16);//短
+  204          //                      OLED_ShowChinese(48,2,11,16);//路       
+  205          //              break;
+  206          //              case 10:
+  207          //                      OLED_ShowString(16,2,"L2",16);
+  208          //                      OLED_ShowChinese(32,2,18,16);//短
+  209          //                      OLED_ShowChinese(48,2,11,16);//路       
+  210          //              break;
+  211          //              case 11:
+  212          //                      OLED_ShowString(16,2,"L3",16);
+  213          //                      OLED_ShowChinese(32,2,18,16);//短
+  214          //                      OLED_ShowChinese(48,2,11,16);//路       
+  215          //              break;
+  216          //              
+  217          //      }
+  218          //}
+  219          ///*多功能独立按键*/
+  220          //void key_independence()
+  221          //{
+  222          //              if(keyvalue == Key1_Single_Click)//KEY1短按测量一次
+  223          //              {
+  224          //                      OLED_Clear();
+  225          //                      Fault_number();
+  226          //                      
+  227          //              }
+  228          //              if(keyvalue == Key1_Long_Click)//KEY1长按,
+  229          //              {
+  230          //                      count_key++;                            //转换测量条件
+  231          //                      
+  232          //              }
+  233          //              if(keyvalue == Key1_Double_Click)//KEY1双击
+  234          //              {
+  235          //                      Key1_nums++;            //KEY1双击次数
+  236          //                      if(Key1_nums%2 == 1)            //奇数次双击
+  237          //                      {
+  238          
+  239          //                      }
+  240          //                      if(Key1_nums%2 == 0)            //偶数次双击，熄灭LED1、LED2
+  241          //                      {
+  242          //                      
+  243          //                      }
+  244          //                      if(Key1_nums >= 99) Key1_nums = 0;              //防止KEY1双击次数溢出，清零
+  245          //              }
+  246          //              
+  247          //              if(keyvalue == Key2_Single_Click) //KEY2短按
+  248          //              {
+  249          //              
+  250          //              }
+  251          //              if(keyvalue == Key2_Long_Click)//KEY2长按
+  252          //              {
+  253          //              
+  254          //              }
+  255          //              if(keyvalue == Key2_Double_Click) //KEY3双击
+  256          //              {
+C251 COMPILER V5.60.0,  main                                                               04/08/23  02:29:44  PAGE 5   
+
+  257          //                      Key2_nums++;            //KEY2双击次数
+  258          //                      if(Key2_nums%2 == 1)            //奇数次双击
+  259          //                      {
+  260          //                      
+  261          //                      }
+  262          //                      if(Key2_nums%2 == 0)            //偶数次双击
+  263          //                      {
+  264          //                      
+  265          //                      }
+  266          //                      if(Key2_nums >= 99) Key2_nums = 0;      //防止KEY2双击次数溢出，清零
+  267          //              }
+  268          //              
+  269          //              if(keyvalue == Key3_Single_Click)//KEY3短按
+  270          //              {
+  271          //              
+  272          //              }
+  273          //              if(keyvalue == Key3_Long_Click)//KEY3长按
+  274          //              {
+  275          //              
+  276          //              }
+  277          //              if(keyvalue == Key3_Double_Click) //KEY3双击
+  278          //              {
+  279          //                      Key3_nums++;            //KEY3双击次数
+  280          //                      if(Key3_nums%2 == 1)//奇数次双击
+  281          //                      {
+  282          
+  283          //                      }
+  284          //                      if(Key3_nums%2 == 0)            //偶数次双击
+  285          //                      {
+  286          
+  287          //                      }
+  288          //                      if(Key3_nums >= 99) Key3_nums = 0;              //防止KEY3双击次数溢出，清零
+  289          //              }
+  290          //              
+  291          //              if(keyvalue == Key4_Single_Click)//KEY4短按
+  292          //              {
+  293          //              
+  294          //              }
+  295          //              if(keyvalue == Key4_Long_Click)//KEY4长按
+  296          //              {
+  297          //              
+  298          //              }
+  299          //              if(keyvalue == Key4_Double_Click)//KEY4双击
+  300          //              {
+  301          //                      Key4_nums++;            //KEY4双击次数
+  302          //                      if(Key4_nums%2 == 1)//奇数次双击        
+  303          //                      {
+  304          
+  305          //                      }
+  306          //                      if(Key4_nums%2 == 0)            //偶数次双击
+  307          //                      {
+  308          //                              
+  309          //                      }
+  310          //                      if(Key4_nums >= 99) Key4_nums = 0;              //防止KEY4双击次数溢出，清零
+  311          //              }
+  312          //}
+  313          
+  314          void main()
+  315          {
+  316   1              
+  317   1              EA=1;
+  318   1              /*调用内部晶振*/
+  319   1              XOSCCR=0xc4;
+  320   1              while(XOSCCR&1);
+  321   1              CLKDIV=0X00;
+  322   1              CLKSEL=0X01;
+C251 COMPILER V5.60.0,  main                                                               04/08/23  02:29:44  PAGE 6   
+
+  323   1              /*使内部调用最快*/
+  324   1              EAXFR=1; 
+  325   1              CKCON=0X00;
+  326   1              WTST=0X00;
+  327   1              /*lo口模式*/
+  328   1              P0M0 = 0X00;P0M1 = 0X00;
+  329   1              P2M0 = 0xff; P2M1 = 0x00; 
+  330   1              P3M0 = 0x00; P3M1 = 0x20; 
+  331   1              P4M0 = 0XFF; P4M1 = 0X00;
+  332   1              /*函数初始化*/
+  333   1              OLED_Init();
+  334   1              Timer0_Init();
+  335   1              Timer1_Init();
+  336   1              UartInit();
+  337   1              while(1)
+  338   1              {
+  339   2                      f_1=f;
+  340   2                      //keyvalue = key_multi();//读取键值
+  341   2                      //key_independence();
+  342   2                      switch(count_key)
+  343   2                      {
+  344   3                              case 0:P01=1;break;
+  345   3                              case 1:P01=0;break;
+  346   3                              case 2:count_key=0;break;
+  347   3                      }
+  348   2                      printf("%.3f\n\r",f_1);
+  349   2                      OLED_ShowNum(0,0,f_1,10,8);
+  350   2                      
+  351   2              }
+  352   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =         8     ------
+  ecode size           =       443     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =        23     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        27     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

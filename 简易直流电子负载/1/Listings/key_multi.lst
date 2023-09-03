@@ -1,0 +1,153 @@
+C251 COMPILER V5.60.0,  key_multi                                                          09/07/23  18:06:22  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE key_multi
+OBJECT MODULE PLACED IN .\Objects\key_multi.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE key_multi.c LARGE INTR2 BROWSE DEBUG PRINT(.\Listings\key_multi.lst) O
+                    -BJECT(.\Objects\key_multi.obj) 
+
+stmt  level    source
+
+    1          #include <key_multi.h>
+    2          
+    3          unsigned char keyscan()
+    4          {
+    5   1              unsigned char keynumber;
+    6   1              if(!KEY1) keynumber = 1;                                                                        //£¡£¡£¡ÐÞ¸Ä´Ë´¦£¬¿ÉÒÔÔö¼Ó/¼õÉÙ°´¼üÊýÁ¿
+    7   1              else if(!KEY2) keynumber = 2;                                                   //£¡£¡£¡ÐÞ¸Ä´Ë´¦£¬¿ÉÒÔÔö¼Ó/¼õÉÙ°´¼üÊýÁ¿
+    8   1              else if(!KEY3) keynumber = 3;                                                   //£¡£¡£¡ÐÞ¸Ä´Ë´¦£¬¿ÉÒÔÔö¼Ó/¼õÉÙ°´¼üÊýÁ¿
+    9   1              else if(!KEY4) keynumber = 4;                                                   //£¡£¡£¡ÐÞ¸Ä´Ë´¦£¬¿ÉÒÔÔö¼Ó/¼õÉÙ°´¼üÊýÁ¿
+   10   1              else keynumber = 0;
+   11   1              
+   12   1              return keynumber;
+   13   1      }
+   14          
+   15          unsigned char key_multi(void)
+   16          {
+   17   1              static unsigned char key_state;                                                                         //°´¼ü×´Ì¬±äÁ¿
+   18   1              static unsigned int key_time;                                                                           //°´¼ü¼ÆÊ±±äÁ¿
+   19   1              static unsigned char key_press_nums;                                                    //°´¼ü´ÎÊý±äÁ¿          
+   20   1              static unsigned int key_time_double;                                                    //°´¼üË«»÷Ê±¼ä
+   21   1              static unsigned char keynum;                                                                                    //¼üÖµ
+   22   1              static unsigned char new_keynum;                                                                        //ÐÂµÄ¼üÖµ
+   23   1              unsigned char key_press, key_return;                                                    //¼üÖµºÍ·µ»ØÖµ
+   24   1              
+   25   1              key_return = None_click;                                                                        //Çå³ý·µ»Ø°´¼üÖµ
+   26   1              key_delayms(10);
+   27   1              switch(keyscan())
+   28   1              {
+   29   2                      case 1:key_press = KEY1;new_keynum = 1;break;           //£¡£¡£¡ÐÞ¸Ä´Ë´¦£¬¿ÉÒÔÔö¼Ó/¼õÉÙ°´¼üÊýÁ¿
+   30   2                      case 2:key_press = KEY2;new_keynum = 2;break;           //£¡£¡£¡ÐÞ¸Ä´Ë´¦£¬¿ÉÒÔÔö¼Ó/¼õÉÙ°´¼üÊýÁ¿
+   31   2                      case 3:key_press = KEY3;new_keynum = 3;break;           //£¡£¡£¡ÐÞ¸Ä´Ë´¦£¬¿ÉÒÔÔö¼Ó/¼õÉÙ°´¼üÊýÁ¿
+   32   2                      case 4:key_press = KEY4;new_keynum = 4;break;           //£¡£¡£¡ÐÞ¸Ä´Ë´¦£¬¿ÉÒÔÔö¼Ó/¼õÉÙ°´¼üÊýÁ¿
+   33   2                      default:key_press = 1;break;
+   34   2              }
+   35   1              if(key_press_nums > 0)                                                                          //°´¼ü´ÎÊý´óÓÚ0£¬ËµÃ÷ÓÐ°´¼ü
+   36   1              {
+   37   2                      key_time_double++;                                                                                      //Ë«»÷¼ÆÊ±
+   38   2                      if(key_time_double >= DOUBLE_KEY_TIME && key_time_double < LONG_KEY_TIME) key_state = KEY_STATE_2;//ÔÚ³
+             -¤°´Ê±¼äºÍË«»÷Ê±¼äÉè¶¨·¶Î§ÄÚ£¬µ½×´Ì¬2
+   39   2              }
+   40   1              switch (key_state)
+   41   1              {
+   42   2                      case KEY_STATE_0:                                                                                       //°´¼ü×´Ì¬0£ºÅÐ¶ÏÓÐÎÞ°´¼ü°´ÏÂ
+   43   2                      {
+   44   3                              if (!key_press)                                                                                         //ÓÐ°´¼ü°´ÏÂ
+   45   3                              {
+   46   4                                      key_time = 0;                                                                                   //ÇåÁãÊ±¼ä¼ä¸ô¼ÆÊý
+   47   4                                      key_state = KEY_STATE_1;                                                //È»ºó½øÈë °´¼ü×´Ì¬1
+   48   4                              }
+   49   3                      }break;
+   50   2                      case KEY_STATE_1:                                                                                       //°´¼ü×´Ì¬1£ºÈí¼þÏû¶¶(È·¶¨°´¼üÊÇ·ñÓÐÐ§£¬¶ø²»ÊÇÎó´¥)¡£°´¼üÓÐÐ§µÄ¶¨Òå£º°´¼ü³
+             -ÖÐø°´ÏÂ³¬¹ýÉè¶¨µÄÏû¶¶Ê±¼ä¡£
+   51   2                      {
+   52   3                              if (!key_press)
+   53   3                              {
+   54   4                                      key_time++;                                                                                             //Ò»´Î10ms
+   55   4                                      if(key_time>=SINGLE_KEY_TIME)                   //Ïû¶¶Ê±¼äÎª£ºSINGLE_KEY_TIME*10ms = 10ms;
+   56   4                                      {
+C251 COMPILER V5.60.0,  key_multi                                                          09/07/23  18:06:22  PAGE 2   
+
+   57   5                                              key_state = KEY_STATE_2;                                        //Èç¹û°´¼üÊ±¼ä³¬¹ý Ïû¶¶Ê±¼ä£¬¼´ÅÐ¶¨Îª°´ÏÂµÄ°´¼üÓÐÐ§¡£½øÈë°´¼ü×´Ì¬2£¬¼Ì
+             -ÐøÅÐ¶¨µ½µ×ÊÇµ¥»÷¡¢Ë«»÷»¹ÊÇ³¤°´
+   58   5                                              key_press_nums++;                                                                       //°´¼ü´ÎÊý+1
+   59   5                                      }
+   60   4                              }
+   61   3                              else key_state = KEY_STATE_0;                           //Èç¹û°´¼üÊ±¼äÃ»ÓÐ³¬¹ý£¬ÅÐ¶¨ÎªÎó´¥£¬°´¼üÎÞÐ§£¬·µ»Ø °´¼ü×´Ì¬0£¬¼ÌÐøµÈ
+             -´ý°´¼ü
+   62   3                      }break;
+   63   2                      case KEY_STATE_2:                                                                                       //°´¼ü×´Ì¬2£ºÅÐ¶¨°´¼üÓÐÐ§µÄÖÖÀà£ºÊÇµ¥»÷£¬Ë«»÷£¬»¹ÊÇ³¤°´
+   64   2                      {
+   65   3                              if(key_press)                                                                                           //Èç¹û°´¼üÔÚ Éè¶¨µÄË«»÷Ê±¼äÄÚÊÍ·Å£¬ÔòÅÐ¶¨Îªµ¥»÷/Ë«»÷
+   66   3                              {
+   67   4                                      if(key_time_double < DOUBLE_KEY_TIME ) key_state = KEY_STATE_0;                                                 //Ë«»÷Ê±¼ä´ïµ½Ç°£¬ÔÙ´ÎÉ¨Ãè°´¼ü
+   68   4                                      if(key_time_double >= DOUBLE_KEY_TIME && key_time_double < LONG_KEY_TIME)       //´ïµ½Ë«»÷Éè¶¨Ê±¼äºó
+   69   4                                      {
+   70   5                                              if(key_press_nums == 1) key_return = Single_click + new_keynum*10;                              //·µ»ØÓÐÐ§°´¼üÖµ£ºµ¥»÷
+   71   5                                              else if(key_press_nums ==2 && new_keynum == keynum) key_return = Double_click + new_keynum*10;  //·µ
+             -»ØÓÐÐ§°´¼üÖµ£ºË«»÷
+   72   5                                              key_state = KEY_STATE_0;                                        //·µ»Ø °´¼ü×´Ì¬0£¬¼ÌÐøµÈ´ý°´¼ü
+   73   5                                              key_press_nums = 0;                                                             //Çå¿Õ°´¼ü´ÎÊý
+   74   5                                              key_time_double = 0;                                                    //Çå¿ÕË«»÷¼ÆÊ±
+   75   5                                      }
+   76   4                              }
+   77   3                              else
+   78   3                              {       
+   79   4                                      key_time++;                                                                                                     //°´¼üÒ»Ö±°´×ÅµÄ»°£¬³¤°´¼ÆÊ±
+   80   4                                      if(key_time >= LONG_KEY_TIME)                   //Èç¹û°´¼üÊ±¼ä³¬¹ý Éè¶¨µÄ³¤°´Ê±¼ä(LONG_KEY_TIME*10ms=80*10ms=800ms),
+             - ÔòÅÐ¶¨Îª ³¤°´
+   81   4                                      {
+   82   5                                              key_return = Long_click + new_keynum*10;        //·µ»ØÓÐÐ§¼üÖµÖµ£º³¤°´
+   83   5                                              key_state = KEY_STATE_3;                                        //È¥×´Ì¬3£¬µÈ´ý°´¼üÊÍ·Å
+   84   5                                      }
+   85   4                              }
+   86   3                      }break;
+   87   2                      case KEY_STATE_3:                                                                                       //µÈ´ý°´¼üÊÍ·Å
+   88   2                      {
+   89   3                              if (key_press)
+   90   3                              {
+   91   4                                      key_state = KEY_STATE_0;                                                //°´¼üÊÍ·Åºó£¬½øÈë °´¼ü×´Ì¬0 £¬½øÐÐÏÂÒ»´Î°´¼üµÄÅÐ¶¨
+   92   4                                      key_press_nums = 0;                                                                     //Çå¿Õ°´¼ü´ÎÊý
+   93   4                                      key_time_double = 0;                                                            //Çå¿ÕË«»÷¼ÆÊ±
+   94   4                              }
+   95   3                      }break;
+   96   2                      default:key_state = KEY_STATE_0;break;  //ÌØÊâÇé¿ö£ºkey_stateÊÇÆäËûÖµµÃÇé¿ö£¬ÇåÁãkey_state¡£ÕâÖÖÇé¿öÒ»°ã
+             -³öÏÖÔÚ Ã»ÓÐ³õÊ¼»¯key_state£¬µÚÒ»´ÎÖ´ÐÐÕâ¸öº¯ÊýµÄÊ±ºò
+   97   2              }
+   98   1              keynum = new_keynum;                                                                                    //½«ÐÂ»ñÈ¡µÄ¼üÖµ¸³Öµ¸ø¼üÖµ
+   99   1              return key_return;                                                                                              //·µ»Ø °´¼üÖµ
+  100   1      }
+  101          void  key_delayms(unsigned int ms)              //¼òµ¥ÑÓÊ±º¯Êý£¬×ÔÊÊÓ¦Ö÷Æµ£¬1ºÁÃë*ms
+  102          {
+  103   1              unsigned int i;
+  104   1              do{
+  105   2                              i = MAIN_Fosc / 6000;
+  106   2                              while(--i);
+  107   2                      }while(--ms);
+  108   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       442     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =         8     ------
+C251 COMPILER V5.60.0,  key_multi                                                          09/07/23  18:06:22  PAGE 3   
+
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

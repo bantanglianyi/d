@@ -1,0 +1,135 @@
+C251 COMPILER V5.60.0,  main                                                               27/06/23  18:06:57  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE main.c LARGE INTR2 BROWSE DEBUG PRINT(.\Listings\main.lst) OBJECT(.\Ob
+                    -jects\main.obj) 
+
+stmt  level    source
+
+    1          #include <STC32G.H>
+    2          #include "oled.h"
+    3          #include <stdio.h>
+    4          #include "pwm.h"
+    5          #define u8 unsigned char
+    6          #define u16 unsigned int
+    7          #define u32 unsigned long
+    8          #define key P7^0
+    9                  u8 a=0;
+   10          u8 zp[50];
+   11          u16 b=500;
+   12          float f;
+   13          u16 TH1_NOW,TL1_NOW;
+   14          char c,TF1_NOW=0;
+   15          void Timer1_Init(void)          //2毫秒@24.000MHz  计数器
+   16          {
+   17   1              TMOD &= 0x0F;                   //设置定时器模式
+   18   1              TMOD |= 0x50;                   //设置定时器模式
+   19   1              TL1 = 0;                                //设置定时初始值
+   20   1              TH1 = 0;                                //设置定时初始值
+   21   1              TF1 = 0;                                //清除TF1标志
+   22   1              TR1 = 1;                                //定时器0开始计时
+   23   1              ET1 = 1;                                //使能定时器1中断
+   24   1              
+   25   1      }
+   26          void Timer0_Isr(void) interrupt 1
+   27          {
+   28   1                      if(b--==0)
+   29   1                      {
+   30   2                              TF1_NOW=c;
+   31   2                              c=0;
+   32   2                              b=500;
+   33   2                              TH1_NOW=TH1;
+   34   2                              TL1_NOW=TL1;
+   35   2                              TH1=0;
+   36   2                              TL1=0;  
+   37   2                              f=(float)((((TH1_NOW<<8)+TL1_NOW)+(TF1_NOW*65535))/0.99873);
+   38   2                      }
+   39   1                      
+   40   1                      
+   41   1      }
+   42          void Timer1_Isr(void) interrupt 3
+   43          {
+   44   1              c++;
+   45   1      }
+   46          void Timer0_Init(void)          //2毫秒@24.000MHz
+   47          {
+   48   1              AUXR |= 0x80;                   //定时器时钟1T模式
+   49   1              TMOD &= 0xF0;                   //设置定时器模式
+   50   1              TL0 = 0x80;                             //设置定时初始值
+   51   1              TH0 = 0x44;                             //设置定时初始值
+   52   1              TF0 = 0;                                //清除TF0标志
+   53   1              TR0 = 1;                                //定时器0开始计时
+   54   1              ET0 = 1;                                //使能定时器0中断
+   55   1      }
+   56          
+   57          float PIDPro(float Sample, float Position)
+   58          {
+C251 COMPILER V5.60.0,  main                                                               27/06/23  18:06:57  PAGE 2   
+
+   59   1              ErrPres=Position-Sample; 
+*** ERROR C67 IN LINE 59 OF main.c: 'ErrPres': undefined identifier
+   60   1              PPro=Kp*ErrPres;
+*** ERROR C67 IN LINE 60 OF main.c: 'PPro': undefined identifier
+*** ERROR C67 IN LINE 60 OF main.c: 'Kp': undefined identifier
+*** ERROR C67 IN LINE 60 OF main.c: 'ErrPres': undefined identifier
+   61   1              total_Pias+=ErrPres;
+*** ERROR C67 IN LINE 61 OF main.c: 'total_Pias': undefined identifier
+*** ERROR C67 IN LINE 61 OF main.c: 'ErrPres': undefined identifier
+   62   1              Pias=total_Pias*Ki;
+*** ERROR C67 IN LINE 62 OF main.c: 'Pias': undefined identifier
+*** ERROR C67 IN LINE 62 OF main.c: 'total_Pias': undefined identifier
+*** ERROR C67 IN LINE 62 OF main.c: 'Ki': undefined identifier
+   63   1              PDif=Kd*(ErrPrev-ErrPres);
+*** ERROR C67 IN LINE 63 OF main.c: 'PDif': undefined identifier
+*** ERROR C67 IN LINE 63 OF main.c: 'Kd': undefined identifier
+*** ERROR C67 IN LINE 63 OF main.c: 'ErrPrev': undefined identifier
+*** ERROR C67 IN LINE 63 OF main.c: 'ErrPres': undefined identifier
+   64   1              ErrPrev=ErrPres;
+*** ERROR C67 IN LINE 64 OF main.c: 'ErrPrev': undefined identifier
+*** ERROR C67 IN LINE 64 OF main.c: 'ErrPres': undefined identifier
+   65   1              VolOut=VolOut+PPro+PDif+Pias;
+*** ERROR C67 IN LINE 65 OF main.c: 'VolOut': undefined identifier
+*** ERROR C67 IN LINE 65 OF main.c: 'VolOut': undefined identifier
+*** ERROR C67 IN LINE 65 OF main.c: 'PPro': undefined identifier
+*** ERROR C67 IN LINE 65 OF main.c: 'PDif': undefined identifier
+*** ERROR C67 IN LINE 65 OF main.c: 'Pias': undefined identifier
+   66   1      //      if(VolOut>5000)VolOut=5000;
+   67   1      //      if(VolOut<-5000)VolOut=-5000;
+   68   1              return VolOut;
+*** ERROR C67 IN LINE 68 OF main.c: 'VolOut': undefined identifier
+   69   1      }
+   70          
+   71          void main()
+   72          {
+   73   1              EA=1;
+   74   1      
+   75   1              XOSCCR=0xc4;
+   76   1              while(XOSCCR&1);
+   77   1              CLKDIV=0X00;
+   78   1              CLKSEL=0X01;
+   79   1              
+   80   1              EAXFR=1;
+   81   1              CKCON=0X00;
+   82   1              WTST=0X00;
+   83   1      
+   84   1              P3M0 &= ~0xdf; P3M1 &= ~0xdf; 
+   85   1              P2M0 = 0xff; P2M1 = 0x00; 
+   86   1              P4M0 = 0XFF; P4M1 = 0X00;
+   87   1              OLED_Init();
+   88   1              Timer0_Init();
+   89   1              Timer1_Init();
+   90   1              PWM_init();
+*** WARNING C140 IN LINE 90 OF main.c: 'PWM_init' undefined; assuming 'extern int PWM_init()'
+   91   1              while(1)
+   92   1              {
+   93   2      
+   94   2                      sprintf(zp,"%.3f",f);
+   95   2                      OLED_ShowString(2,2,zp,8);
+   96   2                      delay_ms(1000);
+   97   2                      
+   98   2              }
+   99   1      }
+
+C251 COMPILATION COMPLETE.  1 WARNING(S),  21 ERROR(S)

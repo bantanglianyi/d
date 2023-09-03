@@ -1,0 +1,770 @@
+L251 LINKER/LOCATER V4.66.93.0                                                          06/30/2023  14:38:07  PAGE 1
+
+
+L251 LINKER/LOCATER V4.66.93.0, INVOKED BY:
+C:\KEIL_V5\C251\BIN\L251.EXE .\Objects\mian.obj, .\Objects\Soft_I2C.obj, .\Objects\pwm.obj TO .\Objects\project PRINT (.
+>> \Listings\project.map) CASE CLASSES (EDATA (0X0-0XFFF), HDATA (0X0-0XFFF))
+
+
+CPU MODE:     251 SOURCE MODE
+MEMORY MODEL: LARGE
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\mian.obj (mian)
+         COMMENT TYPE 0: C251 V5.60.0
+  .\Objects\Soft_I2C.obj (Soft_I2C)
+         COMMENT TYPE 0: C251 V5.60.0
+  .\Objects\pwm.obj (pwm)
+         COMMENT TYPE 0: C251 V5.60.0
+  C:\KEIL_V5\C251\LIB\C2SL.LIB (?C_START?)
+         COMMENT TYPE 0: A251 V4.69.6.0
+
+
+ACTIVE MEMORY CLASSES OF MODULE:  .\Objects\project (mian)
+
+BASE        START       END         USED      MEMORY CLASS
+==========================================================
+000000H     000000H     000FFFH     000100H   EDATA
+000000H     000000H     000FFFH               HDATA
+000000H     FF0000H     FFFFFFH     0004BEH   ECODE
+000020H.0   000020H.0   00002FH.7   000000H.5 BIT
+010000H     010000H     01FFFFH     00001AH   XDATA
+FF0000H     FF0000H     FFFFFFH     00001AH   CODE
+000000H     000000H     00007FH     000008H   DATA
+
+
+MEMORY MAP OF MODULE:  .\Objects\project (mian)
+
+
+START     STOP      LENGTH    ALIGN  RELOC    MEMORY CLASS   SEGMENT NAME
+=========================================================================
+000000H   000007H   000008H   ---    AT..     DATA           "REG BANK 0"
+000008H.0 00001FH.7 000018H.0 ---    ---      **GAP**
+000020H.0 000020H.4 000000H.5 BIT    UNIT     BIT            ?BI?MIAN
+000020H.5 000020H   000000H.3 ---    ---      **GAP**
+000021H   000120H   000100H   BYTE   UNIT     EDATA          ?STACK
+000121H   00FFFFH   00FEDFH   ---    ---      **GAP**
+010000H   010007H   000008H   BYTE   INSEG    XDATA          ?XD?MIAN
+010008H   01000CH   000005H   BYTE   UNIT     XDATA          ?XD?I2C_READ_BITS??SOFT_I2C
+01000DH   010010H   000004H   BYTE   UNIT     XDATA          ?XD?I2C_MEM_WRITE??SOFT_I2C
+010011H   010014H   000004H   BYTE   UNIT     XDATA          ?XD?I2C_MEM_READ??SOFT_I2C
+010015H   010016H   000002H   BYTE   UNIT     XDATA          ?XD?I2C_WRITE_BITS??SOFT_I2C
+010017H   010018H   000002H   BYTE   UNIT     XDATA          ?XD?I2C_READ_BIT??SOFT_I2C
+010019H   010019H   000001H   BYTE   UNIT     XDATA          ?XD?I2C_WRITE_BIT??SOFT_I2C
+01001AH   FEFFFFH   FDFFE6H   ---    ---      **GAP**
+FF0000H   FF0002H   000003H   ---    OFFS..   CODE           ?CO?start251?4
+FF0003H   FF0015H   000013H   BYTE   UNIT     CODE           ?C_C51STARTUP
+FF0016H   FF0019H   000004H   BYTE   UNIT     CODE           ?C_C51STARTUP?3
+FF001AH   FF03D3H   0003BAH   BYTE   INSEG    ECODE          ?PR?SOFT_I2C
+FF03D4H   FF0489H   0000B6H   BYTE   INSEG    ECODE          ?PR?PWM
+FF048AH   FF04D7H   00004EH   BYTE   INSEG    ECODE          ?PR?MIAN
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\project (mian)
+
+
+FUNCTION/MODULE                   BIT_GROUP   DATA_GROUP 
+--> CALLED FUNCTION/MODULE       START  STOP  START  STOP
+L251 LINKER/LOCATER V4.66.93.0                                                        06/30/2023  14:38:07  PAGE 2
+
+
+=========================================================
+?C_C51STARTUP                    ----- -----  ----- -----
+
+*** NEW ROOT *******************
+
+?C_C51STARTUP?3                  ----- -----  ----- -----
+  +--> main?/mian
+
+main?/mian                       ----- -----  ----- -----
+  +--> PWMA_Init?/pwm
+  +--> UpdatePwm?/pwm
+
+PWMA_Init?/pwm                   ----- -----  ----- -----
+
+UpdatePwm?/pwm                   ----- -----  ----- -----
+
+
+
+PUBLIC SYMBOLS OF MODULE:  .\Objects\project (mian)
+
+
+      VALUE       CLASS    TYPE      PUBLIC SYMBOL NAME
+      =================================================
+      000000FFH   NUMBER   ---       ?C?CODESEG
+      00FF0000H   CODE     ---       ?C?STARTUP?
+      00000001H   NUMBER   ---       ?C?XDATASEG
+      00FF0000H   CODE     ---       ?C_STARTUP?
+*SFR* 000000BCH   DATA     BYTE      ADC_CONTR
+*SFR* 000000DEH   DATA     BYTE      ADCCFG
+*SFR* 000000EFH   DATA     BYTE      AUXINTIF
+*SFR* 0000008EH   DATA     BYTE      AUXR
+*SFR* 00000097H   DATA     BYTE      AUXR2
+      00000020H.4 BIT      BIT       B_1ms
+*SFR* 000000F1H   DATA     BYTE      CANICR
+*SFR* 000000EAH   DATA     BYTE      CKCON
+*SFR* 000000E6H   DATA     BYTE      CMPCR1
+*SFR* 000000E7H   DATA     BYTE      CMPCR2
+*SFR* 000000BAH.7 DATA     BIT       EAXFR
+      00FF0059H   ECODE    ---       i2c_ack?
+      00FF001BH   ECODE    ---       i2c_delay?
+      00FF01A6H   ECODE    ---       i2c_mem_read?
+      00FF013AH   ECODE    ---       i2c_mem_write?
+      00FF0075H   ECODE    ---       i2c_nack?
+      00FF031CH   ECODE    ---       i2c_read_bit?
+      00FF035CH   ECODE    ---       i2c_read_bits?
+      00FF00FAH   ECODE    ---       i2c_read_byte?
+*SFR* 000000C0H.7 DATA     BIT       I2C_SCL
+      00FF001CH   ECODE    ---       I2C_SCL_H?
+      00FF001FH   ECODE    ---       I2C_SCL_L?
+*SFR* 000000A0H.0 DATA     BIT       I2C_SDA
+      00FF0022H   ECODE    ---       I2C_SDA_H?
+      00FF0025H   ECODE    ---       I2C_SDA_L?
+      00FF0028H   ECODE    ---       I2C_SDA_Read?
+      00FF002DH   ECODE    ---       i2c_start?
+      00FF0045H   ECODE    ---       i2c_stop?
+      00FF001AH   ECODE    ---       i2c_timeout_delay?
+      00FF008DH   ECODE    ---       i2c_wait_ack?
+      00FF0231H   ECODE    ---       i2c_write_bit?
+      00FF029DH   ECODE    ---       i2c_write_bits?
+      00FF00BDH   ECODE    ---       i2c_write_byte?
+*SFR* 000000C7H   DATA     BYTE      IAP_CONTR
+*SFR* 000000A8H   DATA     BYTE      IE
+*SFR* 000000AFH   DATA     BYTE      IE2
+*SFR* 0000008FH   DATA     BYTE      INTCLKO
+*SFR* 000000B8H   DATA     BYTE      IP
+L251 LINKER/LOCATER V4.66.93.0                                                        06/30/2023  14:38:07  PAGE 3
+
+
+*SFR* 000000B5H   DATA     BYTE      IP2
+*SFR* 000000B6H   DATA     BYTE      IP2H
+*SFR* 000000DFH   DATA     BYTE      IP3
+*SFR* 000000EEH   DATA     BYTE      IP3H
+*SFR* 000000B7H   DATA     BYTE      IPH
+*SFR* 0000009DH   DATA     BYTE      IRCBAND
+*SFR* 000000F9H   DATA     BYTE      LINICR
+      00FF048AH   ECODE    ---       main?
+*SFR* 00000080H   DATA     BYTE      P0
+*SFR* 00000090H   DATA     BYTE      P1
+*SFR* 00000092H   DATA     BYTE      P1M0
+*SFR* 00000091H   DATA     BYTE      P1M1
+*SFR* 000000A0H   DATA     BYTE      P2
+*SFR* 00000096H   DATA     BYTE      P2M0
+*SFR* 00000095H   DATA     BYTE      P2M1
+*SFR* 000000B0H   DATA     BYTE      P3
+*SFR* 000000B2H   DATA     BYTE      P3M0
+*SFR* 000000B1H   DATA     BYTE      P3M1
+*SFR* 000000C0H   DATA     BYTE      P4
+*SFR* 000000B4H   DATA     BYTE      P4M0
+*SFR* 000000B3H   DATA     BYTE      P4M1
+*SFR* 000000C8H   DATA     BYTE      P5
+*SFR* 000000E8H   DATA     BYTE      P6
+*SFR* 000000F8H   DATA     BYTE      P7
+*SFR* 000000A2H   DATA     BYTE      P_SW1
+*SFR* 000000BAH   DATA     BYTE      P_SW2
+*SFR* 000000BBH   DATA     BYTE      P_SW3
+*SFR* 00000087H   DATA     BYTE      PCON
+*SFR* 000000D0H   DATA     BYTE      PSW
+      00010000H   XDATA    WORD      PWM1_Duty
+      00000020H.0 BIT      BIT       PWM1_Flag
+      00010002H   XDATA    WORD      PWM2_Duty
+      00000020H.1 BIT      BIT       PWM2_Flag
+      00010004H   XDATA    WORD      PWM3_Duty
+      00000020H.2 BIT      BIT       PWM3_Flag
+      00010006H   XDATA    WORD      PWM4_Duty
+      00000020H.3 BIT      BIT       PWM4_Flag
+      00FF03D4H   ECODE    ---       PWMA_Init?
+*SFR* 000000FFH   DATA     BYTE      RSTCFG
+*SFR* 0000009AH   DATA     BYTE      S2CON
+*SFR* 000000ACH   DATA     BYTE      S3CON
+*SFR* 000000FDH   DATA     BYTE      S4CON
+*SFR* 00000098H   DATA     BYTE      SCON
+*SFR* 000000CEH   DATA     BYTE      SPCTL
+*SFR* 000000CDH   DATA     BYTE      SPSTAT
+*SFR* 000000DDH   DATA     BYTE      T4T3M
+*SFR* 00000088H   DATA     BYTE      TCON
+*SFR* 00000089H   DATA     BYTE      TMOD
+      00FF0471H   ECODE    ---       UpdatePwm?
+*SFR* 000000F4H   DATA     BYTE      USBCON
+*SFR* 000000C1H   DATA     BYTE      WDT_CONTR
+*SFR* 000000E9H   DATA     BYTE      WTST
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\project (mian)
+
+      VALUE       REP       CLASS    TYPE      SYMBOL NAME
+      ====================================================
+      ---         MODULE    ---      ---       mian
+      00FF048AH   PUBLIC    ECODE    ---       main?
+      00000020H.0 PUBLIC    BIT      BIT       PWM1_Flag
+      00000020H.1 PUBLIC    BIT      BIT       PWM2_Flag
+      00000020H.2 PUBLIC    BIT      BIT       PWM3_Flag
+      00000020H.3 PUBLIC    BIT      BIT       PWM4_Flag
+L251 LINKER/LOCATER V4.66.93.0                                                        06/30/2023  14:38:07  PAGE 4
+
+
+      00000020H.4 PUBLIC    BIT      BIT       B_1ms
+      00010000H   PUBLIC    XDATA    WORD      PWM1_Duty
+      00010002H   PUBLIC    XDATA    WORD      PWM2_Duty
+      00010004H   PUBLIC    XDATA    WORD      PWM3_Duty
+      00010006H   PUBLIC    XDATA    WORD      PWM4_Duty
+      000000D0H   SFRSYM    DATA     BYTE      PSW
+      000000BAH.7 SFRSYM    DATA     BIT       EAXFR
+      0000009DH   SFRSYM    DATA     BYTE      IRCBAND
+      00000097H   SFRSYM    DATA     BYTE      AUXR2
+      000000EAH   SFRSYM    DATA     BYTE      CKCON
+      000000EFH   SFRSYM    DATA     BYTE      AUXINTIF
+      000000FDH   SFRSYM    DATA     BYTE      S4CON
+      000000ACH   SFRSYM    DATA     BYTE      S3CON
+      0000009AH   SFRSYM    DATA     BYTE      S2CON
+      000000B7H   SFRSYM    DATA     BYTE      IPH
+      000000CDH   SFRSYM    DATA     BYTE      SPSTAT
+      000000DDH   SFRSYM    DATA     BYTE      T4T3M
+      000000C1H   SFRSYM    DATA     BYTE      WDT_CONTR
+      000000E9H   SFRSYM    DATA     BYTE      WTST
+      000000DFH   SFRSYM    DATA     BYTE      IP3
+      000000F4H   SFRSYM    DATA     BYTE      USBCON
+      000000B5H   SFRSYM    DATA     BYTE      IP2
+      000000FFH   SFRSYM    DATA     BYTE      RSTCFG
+      000000C7H   SFRSYM    DATA     BYTE      IAP_CONTR
+      000000F9H   SFRSYM    DATA     BYTE      LINICR
+      0000008EH   SFRSYM    DATA     BYTE      AUXR
+      000000AFH   SFRSYM    DATA     BYTE      IE2
+      00000088H   SFRSYM    DATA     BYTE      TCON
+      00000089H   SFRSYM    DATA     BYTE      TMOD
+      00000098H   SFRSYM    DATA     BYTE      SCON
+      000000F1H   SFRSYM    DATA     BYTE      CANICR
+      00000087H   SFRSYM    DATA     BYTE      PCON
+      000000BCH   SFRSYM    DATA     BYTE      ADC_CONTR
+      000000E7H   SFRSYM    DATA     BYTE      CMPCR2
+      000000E6H   SFRSYM    DATA     BYTE      CMPCR1
+      000000DEH   SFRSYM    DATA     BYTE      ADCCFG
+      000000B8H   SFRSYM    DATA     BYTE      IP
+      0000008FH   SFRSYM    DATA     BYTE      INTCLKO
+      000000EEH   SFRSYM    DATA     BYTE      IP3H
+      000000B6H   SFRSYM    DATA     BYTE      IP2H
+      000000A8H   SFRSYM    DATA     BYTE      IE
+      000000BBH   SFRSYM    DATA     BYTE      P_SW3
+      000000BAH   SFRSYM    DATA     BYTE      P_SW2
+      000000A2H   SFRSYM    DATA     BYTE      P_SW1
+      000000CEH   SFRSYM    DATA     BYTE      SPCTL
+      000000F8H   SFRSYM    DATA     BYTE      P7
+      000000E8H   SFRSYM    DATA     BYTE      P6
+      000000C8H   SFRSYM    DATA     BYTE      P5
+      000000C0H   SFRSYM    DATA     BYTE      P4
+      000000B0H   SFRSYM    DATA     BYTE      P3
+      000000B3H   SFRSYM    DATA     BYTE      P4M1
+      000000A0H   SFRSYM    DATA     BYTE      P2
+      000000B1H   SFRSYM    DATA     BYTE      P3M1
+      000000B4H   SFRSYM    DATA     BYTE      P4M0
+      00000090H   SFRSYM    DATA     BYTE      P1
+      00000095H   SFRSYM    DATA     BYTE      P2M1
+      000000B2H   SFRSYM    DATA     BYTE      P3M0
+      00000080H   SFRSYM    DATA     BYTE      P0
+      00000091H   SFRSYM    DATA     BYTE      P1M1
+      00000096H   SFRSYM    DATA     BYTE      P2M0
+      00000092H   SFRSYM    DATA     BYTE      P1M0
+
+      00FF048AH   BLOCK     ECODE    ---       LVL=0
+      00FF048AH   LINE      ECODE    ---       #27
+      00FF048AH   LINE      ECODE    ---       #30
+L251 LINKER/LOCATER V4.66.93.0                                                        06/30/2023  14:38:07  PAGE 5
+
+
+      00FF048DH   LINE      ECODE    ---       #31
+      00FF0490H   LINE      ECODE    ---       #32
+      00FF0493H   LINE      ECODE    ---       #34
+      00FF0499H   LINE      ECODE    ---       #35
+      00FF049FH   LINE      ECODE    ---       #36
+      00FF04A5H   LINE      ECODE    ---       #37
+      00FF04ABH   LINE      ECODE    ---       #39
+      00FF04AFH   LINE      ECODE    ---       #41
+      00FF04AFH   LINE      ECODE    ---       #44
+      00FF04B9H   LINE      ECODE    ---       #46
+      00FF04BCH   LINE      ECODE    ---       #48
+      00FF04C6H   LINE      ECODE    ---       #49
+      00FF04C8H   LINE      ECODE    ---       #53
+      00FF04D0H   LINE      ECODE    ---       #54
+      00FF04D2H   LINE      ECODE    ---       #55
+      00FF04D2H   LINE      ECODE    ---       #56
+      00FF04D6H   LINE      ECODE    ---       #59
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      ---         MODULE    ---      ---       Soft_I2C
+      00FF0075H   PUBLIC    ECODE    ---       i2c_nack?
+      00FF0059H   PUBLIC    ECODE    ---       i2c_ack?
+      00FF002DH   PUBLIC    ECODE    ---       i2c_start?
+      00FF035CH   PUBLIC    ECODE    ---       i2c_read_bits?
+      00FF00FAH   PUBLIC    ECODE    ---       i2c_read_byte?
+      00FF031CH   PUBLIC    ECODE    ---       i2c_read_bit?
+      00FF01A6H   PUBLIC    ECODE    ---       i2c_mem_read?
+      00FF0022H   PUBLIC    ECODE    ---       I2C_SDA_H?
+      00FF029DH   PUBLIC    ECODE    ---       i2c_write_bits?
+      00FF0025H   PUBLIC    ECODE    ---       I2C_SDA_L?
+      00FF00BDH   PUBLIC    ECODE    ---       i2c_write_byte?
+      00FF008DH   PUBLIC    ECODE    ---       i2c_wait_ack?
+      00FF0045H   PUBLIC    ECODE    ---       i2c_stop?
+      00FF001CH   PUBLIC    ECODE    ---       I2C_SCL_H?
+      00FF001FH   PUBLIC    ECODE    ---       I2C_SCL_L?
+      00FF0231H   PUBLIC    ECODE    ---       i2c_write_bit?
+      00FF013AH   PUBLIC    ECODE    ---       i2c_mem_write?
+      00FF0028H   PUBLIC    ECODE    ---       I2C_SDA_Read?
+      00FF001AH   PUBLIC    ECODE    ---       i2c_timeout_delay?
+      00FF001BH   PUBLIC    ECODE    ---       i2c_delay?
+      000000D0H   SFRSYM    DATA     BYTE      PSW
+      000000A0H.0 SFRSYM    DATA     BIT       I2C_SDA
+      0000009DH   SFRSYM    DATA     BYTE      IRCBAND
+      00000097H   SFRSYM    DATA     BYTE      AUXR2
+      000000EFH   SFRSYM    DATA     BYTE      AUXINTIF
+      000000FDH   SFRSYM    DATA     BYTE      S4CON
+      000000ACH   SFRSYM    DATA     BYTE      S3CON
+      0000009AH   SFRSYM    DATA     BYTE      S2CON
+      000000B7H   SFRSYM    DATA     BYTE      IPH
+      000000CDH   SFRSYM    DATA     BYTE      SPSTAT
+      000000DDH   SFRSYM    DATA     BYTE      T4T3M
+      000000C1H   SFRSYM    DATA     BYTE      WDT_CONTR
+      000000DFH   SFRSYM    DATA     BYTE      IP3
+      000000F4H   SFRSYM    DATA     BYTE      USBCON
+      000000B5H   SFRSYM    DATA     BYTE      IP2
+      000000FFH   SFRSYM    DATA     BYTE      RSTCFG
+      000000C7H   SFRSYM    DATA     BYTE      IAP_CONTR
+      000000F9H   SFRSYM    DATA     BYTE      LINICR
+      0000008EH   SFRSYM    DATA     BYTE      AUXR
+      000000AFH   SFRSYM    DATA     BYTE      IE2
+      00000088H   SFRSYM    DATA     BYTE      TCON
+      00000089H   SFRSYM    DATA     BYTE      TMOD
+      00000098H   SFRSYM    DATA     BYTE      SCON
+      000000F1H   SFRSYM    DATA     BYTE      CANICR
+      00000087H   SFRSYM    DATA     BYTE      PCON
+L251 LINKER/LOCATER V4.66.93.0                                                        06/30/2023  14:38:07  PAGE 6
+
+
+      000000BCH   SFRSYM    DATA     BYTE      ADC_CONTR
+      000000E7H   SFRSYM    DATA     BYTE      CMPCR2
+      000000E6H   SFRSYM    DATA     BYTE      CMPCR1
+      000000DEH   SFRSYM    DATA     BYTE      ADCCFG
+      000000B8H   SFRSYM    DATA     BYTE      IP
+      0000008FH   SFRSYM    DATA     BYTE      INTCLKO
+      000000EEH   SFRSYM    DATA     BYTE      IP3H
+      000000B6H   SFRSYM    DATA     BYTE      IP2H
+      000000A8H   SFRSYM    DATA     BYTE      IE
+      000000BBH   SFRSYM    DATA     BYTE      P_SW3
+      000000BAH   SFRSYM    DATA     BYTE      P_SW2
+      000000A2H   SFRSYM    DATA     BYTE      P_SW1
+      000000CEH   SFRSYM    DATA     BYTE      SPCTL
+      000000F8H   SFRSYM    DATA     BYTE      P7
+      000000E8H   SFRSYM    DATA     BYTE      P6
+      000000C8H   SFRSYM    DATA     BYTE      P5
+      000000C0H   SFRSYM    DATA     BYTE      P4
+      000000B0H   SFRSYM    DATA     BYTE      P3
+      000000A0H   SFRSYM    DATA     BYTE      P2
+      000000C0H.7 SFRSYM    DATA     BIT       I2C_SCL
+      00000090H   SFRSYM    DATA     BYTE      P1
+      00000080H   SFRSYM    DATA     BYTE      P0
+
+      00FF001AH   BLOCK     ECODE    ---       LVL=0
+      00FF001AH   LINE      ECODE    ---       #6
+      00FF001AH   LINE      ECODE    ---       #9
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF001BH   BLOCK     ECODE    ---       LVL=0
+      00FF001BH   LINE      ECODE    ---       #11
+      00FF001BH   LINE      ECODE    ---       #14
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF001CH   BLOCK     ECODE    ---       LVL=0
+      00FF001CH   LINE      ECODE    ---       #17
+      00FF001CH   LINE      ECODE    ---       #19
+      00FF001EH   LINE      ECODE    ---       #20
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF001FH   BLOCK     ECODE    ---       LVL=0
+      00FF001FH   LINE      ECODE    ---       #23
+      00FF001FH   LINE      ECODE    ---       #25
+      00FF0021H   LINE      ECODE    ---       #26
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF0022H   BLOCK     ECODE    ---       LVL=0
+      00FF0022H   LINE      ECODE    ---       #29
+      00FF0022H   LINE      ECODE    ---       #31
+      00FF0024H   LINE      ECODE    ---       #32
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF0025H   BLOCK     ECODE    ---       LVL=0
+      00FF0025H   LINE      ECODE    ---       #35
+      00FF0025H   LINE      ECODE    ---       #37
+      00FF0027H   LINE      ECODE    ---       #38
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF0028H   BLOCK     ECODE    ---       LVL=0
+      00FF0028H   LINE      ECODE    ---       #41
+      00FF0028H   LINE      ECODE    ---       #43
+      00FF002CH   LINE      ECODE    ---       #44
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF002DH   BLOCK     ECODE    ---       LVL=0
+      00FF002DH   LINE      ECODE    ---       #52
+L251 LINKER/LOCATER V4.66.93.0                                                        06/30/2023  14:38:07  PAGE 7
+
+
+      00FF002DH   LINE      ECODE    ---       #54
+      00FF0031H   LINE      ECODE    ---       #55
+      00FF0035H   LINE      ECODE    ---       #56
+      00FF0039H   LINE      ECODE    ---       #58
+      00FF003DH   LINE      ECODE    ---       #59
+      00FF0041H   LINE      ECODE    ---       #60
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF0045H   BLOCK     ECODE    ---       LVL=0
+      00FF0045H   LINE      ECODE    ---       #69
+      00FF0045H   LINE      ECODE    ---       #71
+      00FF0049H   LINE      ECODE    ---       #72
+      00FF004DH   LINE      ECODE    ---       #73
+      00FF0051H   LINE      ECODE    ---       #75
+      00FF0055H   LINE      ECODE    ---       #76
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF0059H   BLOCK     ECODE    ---       LVL=0
+      00FF0059H   LINE      ECODE    ---       #85
+      00FF0059H   LINE      ECODE    ---       #87
+      00FF005DH   LINE      ECODE    ---       #88
+      00FF0061H   LINE      ECODE    ---       #89
+      00FF0065H   LINE      ECODE    ---       #91
+      00FF0069H   LINE      ECODE    ---       #92
+      00FF006DH   LINE      ECODE    ---       #93
+      00FF0071H   LINE      ECODE    ---       #94
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF0075H   BLOCK     ECODE    ---       LVL=0
+      00FF0075H   LINE      ECODE    ---       #103
+      00FF0075H   LINE      ECODE    ---       #105
+      00FF0079H   LINE      ECODE    ---       #106
+      00FF007DH   LINE      ECODE    ---       #107
+      00FF0081H   LINE      ECODE    ---       #109
+      00FF0085H   LINE      ECODE    ---       #110
+      00FF0089H   LINE      ECODE    ---       #111
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF008DH   BLOCK     ECODE    ---       LVL=0
+      00FF008FH   BLOCK     ECODE    NEAR LAB  LVL=1
+      WR14        REGSYM    ---      WORD      time_temp
+      ---         BLOCKEND  ---      ---       LVL=1
+      00FF008DH   LINE      ECODE    ---       #121
+      00FF008FH   LINE      ECODE    ---       #122
+      00FF008FH   LINE      ECODE    ---       #123
+      00FF0091H   LINE      ECODE    ---       #125
+      00FF0095H   LINE      ECODE    ---       #126
+      00FF0099H   LINE      ECODE    ---       #127
+      00FF009BH   LINE      ECODE    ---       #129
+      00FF009DH   LINE      ECODE    ---       #130
+      00FF00A1H   LINE      ECODE    ---       #131
+      00FF00A7H   LINE      ECODE    ---       #133
+      00FF00ABH   LINE      ECODE    ---       #134
+      00FF00AFH   LINE      ECODE    ---       #135
+      00FF00B5H   LINE      ECODE    ---       #137
+      00FF00B9H   LINE      ECODE    ---       #138
+      00FF00BAH   LINE      ECODE    ---       #139
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF00BDH   BLOCK     ECODE    ---       LVL=0
+      R15         REGSYM    ---      BYTE      dat
+      00FF00C1H   BLOCK     ECODE    NEAR LAB  LVL=1
+      R14         REGSYM    ---      BYTE      i
+      ---         BLOCKEND  ---      ---       LVL=1
+      00FF00BDH   LINE      ECODE    ---       #147
+L251 LINKER/LOCATER V4.66.93.0                                                        06/30/2023  14:38:07  PAGE 8
+
+
+      00FF00C1H   LINE      ECODE    ---       #148
+      00FF00C1H   LINE      ECODE    ---       #149
+      00FF00C1H   LINE      ECODE    ---       #151
+      00FF00C5H   LINE      ECODE    ---       #152
+      00FF00C7H   LINE      ECODE    ---       #154
+      00FF00D0H   LINE      ECODE    ---       #155
+      00FF00D6H   LINE      ECODE    ---       #157
+      00FF00DAH   LINE      ECODE    ---       #158
+      00FF00DCH   LINE      ECODE    ---       #159
+      00FF00E0H   LINE      ECODE    ---       #160
+      00FF00E4H   LINE      ECODE    ---       #161
+      00FF00E8H   LINE      ECODE    ---       #162
+      00FF00ECH   LINE      ECODE    ---       #163
+      00FF00F0H   LINE      ECODE    ---       #164
+      00FF00F7H   LINE      ECODE    ---       #165
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF00FAH   BLOCK     ECODE    ---       LVL=0
+      R15         REGSYM    ---      BYTE      ack
+      00FF0100H   BLOCK     ECODE    NEAR LAB  LVL=1
+      R13         REGSYM    ---      BYTE      i
+      R14         REGSYM    ---      BYTE      receive
+      ---         BLOCKEND  ---      ---       LVL=1
+      00FF00FAH   LINE      ECODE    ---       #173
+      00FF0100H   LINE      ECODE    ---       #174
+      00FF0100H   LINE      ECODE    ---       #175
+      00FF0102H   LINE      ECODE    ---       #177
+      00FF0104H   LINE      ECODE    ---       #179
+      00FF0108H   LINE      ECODE    ---       #180
+      00FF010CH   LINE      ECODE    ---       #181
+      00FF0110H   LINE      ECODE    ---       #182
+      00FF0112H   LINE      ECODE    ---       #183
+      00FF0118H   LINE      ECODE    ---       #184
+      00FF011AH   LINE      ECODE    ---       #185
+      00FF011EH   LINE      ECODE    ---       #186
+      00FF0125H   LINE      ECODE    ---       #187
+      00FF0129H   LINE      ECODE    ---       #188
+      00FF012FH   LINE      ECODE    ---       #190
+      00FF0133H   LINE      ECODE    ---       #192
+      00FF0135H   LINE      ECODE    ---       #193
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF013AH   BLOCK     ECODE    ---       LVL=0
+      0001000DH   SYMBOL    XDATA    BYTE      DevAddress
+      0001000EH   SYMBOL    XDATA    BYTE      MemAddress
+      REG=3       REGSYM    ---      ---       pData
+      0001000FH   SYMBOL    XDATA    WORD      Len
+      00FF013AH   LINE      ECODE    ---       #201
+      00FF014EH   LINE      ECODE    ---       #203
+      00FF0152H   LINE      ECODE    ---       #204
+      00FF015CH   LINE      ECODE    ---       #205
+      00FF0162H   LINE      ECODE    ---       #206
+      00FF0166H   LINE      ECODE    ---       #207
+      00FF016EH   LINE      ECODE    ---       #208
+      00FF0174H   LINE      ECODE    ---       #209
+      00FF0178H   LINE      ECODE    ---       #210
+      00FF017AH   LINE      ECODE    ---       #212
+      00FF0183H   LINE      ECODE    ---       #213
+      00FF0189H   LINE      ECODE    ---       #214
+      00FF018DH   LINE      ECODE    ---       #215
+      00FF019EH   LINE      ECODE    ---       #216
+      00FF01A2H   LINE      ECODE    ---       #217
+      00FF01A3H   LINE      ECODE    ---       #218
+      ---         BLOCKEND  ---      ---       LVL=0
+
+L251 LINKER/LOCATER V4.66.93.0                                                        06/30/2023  14:38:07  PAGE 9
+
+
+      00FF01A6H   BLOCK     ECODE    ---       LVL=0
+      00010011H   SYMBOL    XDATA    BYTE      DevAddress
+      00010012H   SYMBOL    XDATA    BYTE      MemAddress
+      REG=3       REGSYM    ---      ---       pBuffer
+      00010013H   SYMBOL    XDATA    WORD      Len
+      00FF01A6H   LINE      ECODE    ---       #226
+      00FF01BAH   LINE      ECODE    ---       #228
+      00FF01BEH   LINE      ECODE    ---       #229
+      00FF01C8H   LINE      ECODE    ---       #230
+      00FF01CEH   LINE      ECODE    ---       #231
+      00FF01D2H   LINE      ECODE    ---       #232
+      00FF01DAH   LINE      ECODE    ---       #233
+      00FF01E0H   LINE      ECODE    ---       #234
+      00FF01E4H   LINE      ECODE    ---       #235
+      00FF01E8H   LINE      ECODE    ---       #236
+      00FF01F4H   LINE      ECODE    ---       #237
+      00FF01FAH   LINE      ECODE    ---       #238
+      00FF01FEH   LINE      ECODE    ---       #239
+      00FF0200H   LINE      ECODE    ---       #241
+      00FF0218H   LINE      ECODE    ---       #242
+      00FF0229H   LINE      ECODE    ---       #243
+      00FF022DH   LINE      ECODE    ---       #244
+      00FF022EH   LINE      ECODE    ---       #245
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF0231H   BLOCK     ECODE    ---       LVL=0
+      R13         REGSYM    ---      BYTE      DevAddress
+      R14         REGSYM    ---      BYTE      addr
+      R15         REGSYM    ---      BYTE      bitNum
+      R12         REGSYM    ---      BYTE      Data
+      00FF023BH   BLOCK     ECODE    NEAR LAB  LVL=1
+      00010019H   SYMBOL    XDATA    BYTE      b
+      ---         BLOCKEND  ---      ---       LVL=1
+      00FF0231H   LINE      ECODE    ---       #254
+      00FF023BH   LINE      ECODE    ---       #255
+      00FF023BH   LINE      ECODE    ---       #257
+      00FF024DH   LINE      ECODE    ---       #259
+      00FF0282H   LINE      ECODE    ---       #260
+      00FF0298H   LINE      ECODE    ---       #261
+      00FF0298H   LINE      ECODE    ---       #263
+      00FF029AH   LINE      ECODE    ---       #264
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF029DH   BLOCK     ECODE    ---       LVL=0
+      00010015H   SYMBOL    XDATA    BYTE      DevAddress
+      R12         REGSYM    ---      BYTE      addr
+      R13         REGSYM    ---      BYTE      bitStart
+      R14         REGSYM    ---      BYTE      length
+      R15         REGSYM    ---      BYTE      Data
+      00FF02ABH   BLOCK     ECODE    NEAR LAB  LVL=1
+      00010016H   SYMBOL    XDATA    BYTE      b
+      R10         REGSYM    ---      BYTE      mask
+      ---         BLOCKEND  ---      ---       LVL=1
+      00FF029DH   LINE      ECODE    ---       #274
+      00FF02ABH   LINE      ECODE    ---       #275
+      00FF02ABH   LINE      ECODE    ---       #283
+      00FF02ABH   LINE      ECODE    ---       #284
+      00FF02C1H   LINE      ECODE    ---       #286
+      00FF02E3H   LINE      ECODE    ---       #287
+      00FF02ECH   LINE      ECODE    ---       #288
+      00FF02EEH   LINE      ECODE    ---       #289
+      00FF02F8H   LINE      ECODE    ---       #290
+      00FF02FFH   LINE      ECODE    ---       #292
+      00FF0317H   LINE      ECODE    ---       #293
+      00FF0317H   LINE      ECODE    ---       #295
+L251 LINKER/LOCATER V4.66.93.0                                                        06/30/2023  14:38:07  PAGE 10
+
+
+      00FF0319H   LINE      ECODE    ---       #296
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF031CH   BLOCK     ECODE    ---       LVL=0
+      R11         REGSYM    ---      BYTE      DevAddress
+      R7          REGSYM    ---      BYTE      addr
+      00010017H   SYMBOL    XDATA    BYTE      bitNum
+      REG=3       REGSYM    ---      ---       Data
+      00FF0326H   BLOCK     ECODE    NEAR LAB  LVL=1
+      00010018H   SYMBOL    XDATA    BYTE      b
+      ---         BLOCKEND  ---      ---       LVL=1
+      00FF031CH   LINE      ECODE    ---       #304
+      00FF0326H   LINE      ECODE    ---       #305
+      00FF0326H   LINE      ECODE    ---       #307
+      00FF0338H   LINE      ECODE    ---       #309
+      00FF0354H   LINE      ECODE    ---       #310
+      00FF0357H   LINE      ECODE    ---       #311
+      00FF0357H   LINE      ECODE    ---       #314
+      00FF0359H   LINE      ECODE    ---       #315
+      00FF0359H   LINE      ECODE    ---       #316
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF035CH   BLOCK     ECODE    ---       LVL=0
+      R11         REGSYM    ---      BYTE      DevAddress
+      R7          REGSYM    ---      BYTE      addr
+      R14         REGSYM    ---      BYTE      bitStart
+      R15         REGSYM    ---      BYTE      length
+      00010008H   SYMBOL    XDATA    ---       Data
+      00FF036CH   BLOCK     ECODE    NEAR LAB  LVL=1
+      0001000CH   SYMBOL    XDATA    BYTE      b
+      R10         REGSYM    ---      BYTE      mask
+      ---         BLOCKEND  ---      ---       LVL=1
+      00FF035CH   LINE      ECODE    ---       #325
+      00FF036CH   LINE      ECODE    ---       #326
+      00FF036CH   LINE      ECODE    ---       #332
+      00FF036CH   LINE      ECODE    ---       #333
+      00FF037EH   LINE      ECODE    ---       #336
+      00FF039CH   LINE      ECODE    ---       #337
+      00FF03A3H   LINE      ECODE    ---       #338
+      00FF03BBH   LINE      ECODE    ---       #339
+      00FF03CCH   LINE      ECODE    ---       #340
+      00FF03CFH   LINE      ECODE    ---       #341
+      00FF03CFH   LINE      ECODE    ---       #343
+      00FF03D1H   LINE      ECODE    ---       #344
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      ---         MODULE    ---      ---       pwm
+      00FF0471H   PUBLIC    ECODE    ---       UpdatePwm?
+      00FF03D4H   PUBLIC    ECODE    ---       PWMA_Init?
+      000000D0H   SFRSYM    DATA     BYTE      PSW
+      0000009DH   SFRSYM    DATA     BYTE      IRCBAND
+      00000097H   SFRSYM    DATA     BYTE      AUXR2
+      000000EFH   SFRSYM    DATA     BYTE      AUXINTIF
+      000000FDH   SFRSYM    DATA     BYTE      S4CON
+      000000ACH   SFRSYM    DATA     BYTE      S3CON
+      0000009AH   SFRSYM    DATA     BYTE      S2CON
+      000000B7H   SFRSYM    DATA     BYTE      IPH
+      000000CDH   SFRSYM    DATA     BYTE      SPSTAT
+      000000DDH   SFRSYM    DATA     BYTE      T4T3M
+      000000C1H   SFRSYM    DATA     BYTE      WDT_CONTR
+      000000DFH   SFRSYM    DATA     BYTE      IP3
+      000000F4H   SFRSYM    DATA     BYTE      USBCON
+      000000B5H   SFRSYM    DATA     BYTE      IP2
+      000000FFH   SFRSYM    DATA     BYTE      RSTCFG
+      000000C7H   SFRSYM    DATA     BYTE      IAP_CONTR
+L251 LINKER/LOCATER V4.66.93.0                                                        06/30/2023  14:38:07  PAGE 11
+
+
+      000000F9H   SFRSYM    DATA     BYTE      LINICR
+      0000008EH   SFRSYM    DATA     BYTE      AUXR
+      000000AFH   SFRSYM    DATA     BYTE      IE2
+      00000088H   SFRSYM    DATA     BYTE      TCON
+      00000089H   SFRSYM    DATA     BYTE      TMOD
+      00000098H   SFRSYM    DATA     BYTE      SCON
+      000000F1H   SFRSYM    DATA     BYTE      CANICR
+      00000087H   SFRSYM    DATA     BYTE      PCON
+      000000BCH   SFRSYM    DATA     BYTE      ADC_CONTR
+      000000E7H   SFRSYM    DATA     BYTE      CMPCR2
+      000000E6H   SFRSYM    DATA     BYTE      CMPCR1
+      000000DEH   SFRSYM    DATA     BYTE      ADCCFG
+      000000B8H   SFRSYM    DATA     BYTE      IP
+      0000008FH   SFRSYM    DATA     BYTE      INTCLKO
+      000000EEH   SFRSYM    DATA     BYTE      IP3H
+      000000B6H   SFRSYM    DATA     BYTE      IP2H
+      000000A8H   SFRSYM    DATA     BYTE      IE
+      000000BBH   SFRSYM    DATA     BYTE      P_SW3
+      000000BAH   SFRSYM    DATA     BYTE      P_SW2
+      000000A2H   SFRSYM    DATA     BYTE      P_SW1
+      000000CEH   SFRSYM    DATA     BYTE      SPCTL
+      000000F8H   SFRSYM    DATA     BYTE      P7
+      000000E8H   SFRSYM    DATA     BYTE      P6
+      000000C8H   SFRSYM    DATA     BYTE      P5
+      000000C0H   SFRSYM    DATA     BYTE      P4
+      000000B0H   SFRSYM    DATA     BYTE      P3
+      000000A0H   SFRSYM    DATA     BYTE      P2
+      00000090H   SFRSYM    DATA     BYTE      P1
+      00000080H   SFRSYM    DATA     BYTE      P0
+
+      00FF03D4H   BLOCK     ECODE    ---       LVL=0
+      00FF03D4H   LINE      ECODE    ---       #74
+      00FF03D6H   LINE      ECODE    ---       #78
+      00FF03D8H   LINE      ECODE    ---       #79
+      00FF03DAH   LINE      ECODE    ---       #80
+      00FF03DCH   LINE      ECODE    ---       #81
+      00FF03DEH   LINE      ECODE    ---       #83
+      00FF03E6H   LINE      ECODE    ---       #90
+      00FF03F2H   LINE      ECODE    ---       #91
+      00FF03FDH   LINE      ECODE    ---       #92
+      00FF040BH   LINE      ECODE    ---       #93
+      00FF0412H   LINE      ECODE    ---       #94
+      00FF0419H   LINE      ECODE    ---       #95
+      00FF0420H   LINE      ECODE    ---       #96
+      00FF0425H   LINE      ECODE    ---       #97
+      00FF0428H   LINE      ECODE    ---       #99
+      00FF0430H   LINE      ECODE    ---       #100
+      00FF0439H   LINE      ECODE    ---       #102
+      00FF0441H   LINE      ECODE    ---       #103
+      00FF0449H   LINE      ECODE    ---       #104
+      00FF0451H   LINE      ECODE    ---       #112
+      00FF0459H   LINE      ECODE    ---       #118
+      00FF0462H   LINE      ECODE    ---       #119
+      00FF046EH   LINE      ECODE    ---       #121
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      00FF0471H   BLOCK     ECODE    ---       LVL=0
+      00FF0471H   LINE      ECODE    ---       #180
+      00FF0471H   LINE      ECODE    ---       #182
+      00FF0482H   LINE      ECODE    ---       #183
+      00FF0489H   LINE      ECODE    ---       #190
+      ---         BLOCKEND  ---      ---       LVL=0
+
+      ---         MODULE    ---      ---       ?C_START?
+      00FF0000H   PUBLIC    CODE     ---       ?C?STARTUP?
+L251 LINKER/LOCATER V4.66.93.0                                                        06/30/2023  14:38:07  PAGE 12
+
+
+      00FF0000H   PUBLIC    CODE     ---       ?C_STARTUP?
+
+
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    NAME:    i2c_write_bit?/Soft_I2C
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    NAME:    i2c_write_bits?/Soft_I2C
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    NAME:    i2c_read_bit?/Soft_I2C
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    NAME:    i2c_read_bits?/Soft_I2C
+
+Program Size: data=8.5 edata+hdata=256 xdata=26 const=0 code=1240
+L251 RUN COMPLETE.  4 WARNING(S),  0 ERROR(S)

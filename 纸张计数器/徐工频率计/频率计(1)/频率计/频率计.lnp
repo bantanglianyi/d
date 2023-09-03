@@ -1,0 +1,7 @@
+"STARTUP.obj",
+"main.obj",
+"time.obj",
+"delay.obj",
+"ckp.obj" 
+TO "ÆµÂÊ¼Æ" 
+RAMSIZE(256) 

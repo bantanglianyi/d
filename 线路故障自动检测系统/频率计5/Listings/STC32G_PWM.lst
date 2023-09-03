@@ -1,0 +1,13 @@
+C251 COMPILER V5.60.0,  STC32G_PWM                                                         03/08/23  19:25:43  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE STC32G_PWM
+OBJECT MODULE PLACED IN .\Objects\STC32G_PWM.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE STC32G_PWM.c LARGE INTR2 BROWSE DEBUG PRINT(.\Listings\STC32G_PWM.lst)
+                    - OBJECT(.\Objects\STC32G_PWM.obj) 
+
+stmt  level    source
+
+*** ERROR C318 OF STC32G_PWM.c: can't open file 'STC32G_PWM.c'
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  1 ERROR(S)

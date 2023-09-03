@@ -1,0 +1,259 @@
+C251 COMPILER V5.60.0,  main                                                               19/07/23  00:24:25  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE main.c LARGE INTR2 ROM(HUGE) BROWSE DEBUG PRINT(.\Listings\main.lst) O
+                    -BJECT(.\Objects\main.obj) 
+
+stmt  level    source
+
+    1          #include <STC32G.H>
+    2          #include "oled.h"
+    3          #include <stdio.h>
+    4          #include "USART.h"
+    5          #include <intrins.h>
+    6          
+    7          bit INT0_judge=0;
+    8          char count=0;
+    9          char transfer;
+   10          unsigned char array_signal[8]={0};
+   11          char i=0;
+   12          char xstart=3;
+   13          unsigned char interim;
+   14          unsigned char interim_array_signal;
+   15          
+   16          
+   17          void Delay2us()         //@11.0592MHz
+   18          {
+   19   1                      unsigned long edata g;
+   20   1      
+   21   1              _nop_();
+   22   1              _nop_();
+   23   1              _nop_();
+   24   1              _nop_();
+   25   1              g = 4UL;
+   26   1              while (g) g--;
+   27   1      }
+   28          
+   29          void delay(unsigned int ns)
+   30          {
+   31   1              while(ns--);
+   32   1      }
+   33          void signaldisplay(unsigned char ax,unsigned char ay,unsigned char tall,unsigned char wide,unsigned char 
+             -gap,unsigned int continue_time)
+   34          {
+   35   1                      Draw_Hline(0,ay,(ax-1),continue_time);
+*** WARNING C188 IN LINE 35 OF main.c: 'parameter 3': value truncated
+   36   1                      Draw_Vline(ax,(ay-tall),ay,continue_time);
+*** WARNING C188 IN LINE 36 OF main.c: 'parameter 2': value truncated
+   37   1                      Draw_Hline((ax+1),(ay-tall),(ax+wide),continue_time);
+*** WARNING C188 IN LINE 37 OF main.c: 'parameter 1': value truncated
+*** WARNING C188 IN LINE 37 OF main.c: 'parameter 2': value truncated
+*** WARNING C188 IN LINE 37 OF main.c: 'parameter 3': value truncated
+   38   1                      Draw_Vline((ax+wide+1),(ay-tall),ay,continue_time);
+*** WARNING C188 IN LINE 38 OF main.c: 'parameter 1': value truncated
+*** WARNING C188 IN LINE 38 OF main.c: 'parameter 2': value truncated
+   39   1                      Draw_Hline((ax+wide+2),ay,(ax+wide+gap),continue_time);
+*** WARNING C188 IN LINE 39 OF main.c: 'parameter 1': value truncated
+*** WARNING C188 IN LINE 39 OF main.c: 'parameter 3': value truncated
+   40   1              
+   41   1                      Draw_Vline((ax+wide+1+gap),(ay-tall),ay,continue_time);
+*** WARNING C188 IN LINE 41 OF main.c: 'parameter 1': value truncated
+*** WARNING C188 IN LINE 41 OF main.c: 'parameter 2': value truncated
+   42   1                      Draw_Hline((ax+wide+2+gap),(ay-tall),(ax+wide+gap+wide),continue_time);
+*** WARNING C188 IN LINE 42 OF main.c: 'parameter 1': value truncated
+*** WARNING C188 IN LINE 42 OF main.c: 'parameter 2': value truncated
+*** WARNING C188 IN LINE 42 OF main.c: 'parameter 3': value truncated
+   43   1                      Draw_Vline((ax+wide+gap+wide+1),(ay-tall),ay,continue_time);
+C251 COMPILER V5.60.0,  main                                                               19/07/23  00:24:25  PAGE 2   
+
+*** WARNING C188 IN LINE 43 OF main.c: 'parameter 1': value truncated
+*** WARNING C188 IN LINE 43 OF main.c: 'parameter 2': value truncated
+   44   1                      Draw_Hline((ax+wide+gap+wide+2),ay,128,continue_time);
+*** WARNING C188 IN LINE 44 OF main.c: 'parameter 1': value truncated
+   45   1      }
+   46                  
+   47                          
+   48          
+   49          int judge(unsigned char judge_price)
+   50          {
+   51   1              char judge_price1=0;
+   52   1                      if(judge_price==5)judge_price1=0;
+   53   1              else 
+   54   1                      if(judge_price==10)judge_price1=15;
+   55   1              else 
+   56   1                      if(judge_price==20)judge_price1=30;
+   57   1              else 
+   58   1                      if(judge_price==40)judge_price1=45;
+   59   1              else 
+   60   1                      if(judge_price==80)judge_price1=60;
+   61   1              else 
+   62   1                      if(judge_price==160)judge_price1=75;
+   63   1              else 
+   64   1                      if(judge_price==65)judge_price1=90;
+   65   1              else 
+   66   1                      if(judge_price==130)judge_price1=105;
+   67   1              return judge_price1;
+   68   1      }
+   69          void judge_1()
+   70          {
+   71   1      
+   72   1                              switch(count)
+   73   1                              {
+   74   2                                      case 0:
+   75   2                                              interim_array_signal=array_signal[count];
+   76   2                                              interim=judge(interim_array_signal);
+   77   2                                              signaldisplay((xstart+interim),5,5,15,15,1);
+*** WARNING C188 IN LINE 77 OF main.c: 'parameter 1': value truncated
+   78   2                                      break;
+   79   2                                      case 1:
+   80   2                                                      interim_array_signal=array_signal[count];
+   81   2                                              interim=judge(interim_array_signal);
+   82   2                                              signaldisplay((xstart+interim),13,5,15,15,1);
+*** WARNING C188 IN LINE 82 OF main.c: 'parameter 1': value truncated
+   83   2                                      break;
+   84   2                                      case 2:
+   85   2                                                      interim_array_signal=array_signal[count];
+   86   2                                              interim=judge(interim_array_signal);
+   87   2                                              signaldisplay((xstart+interim),21,5,15,15,1);
+*** WARNING C188 IN LINE 87 OF main.c: 'parameter 1': value truncated
+   88   2                                      break;
+   89   2                                      case 3:
+   90   2                                                      interim_array_signal=array_signal[count];
+   91   2                                              interim=judge(interim_array_signal);
+   92   2                                              signaldisplay((xstart+interim),29,5,15,15,1);
+*** WARNING C188 IN LINE 92 OF main.c: 'parameter 1': value truncated
+   93   2                                      break;
+   94   2                                      case 4:
+   95   2                                                      interim_array_signal=array_signal[count];
+   96   2                                              interim=judge(interim_array_signal);
+   97   2                                              signaldisplay((xstart+interim),37,5,15,15,1);
+*** WARNING C188 IN LINE 97 OF main.c: 'parameter 1': value truncated
+   98   2                                      break;
+   99   2                                      case 5:
+  100   2                                                      interim_array_signal=array_signal[count];
+  101   2                                              interim=judge(interim_array_signal);
+C251 COMPILER V5.60.0,  main                                                               19/07/23  00:24:25  PAGE 3   
+
+  102   2                                              signaldisplay((xstart+interim),45,5,15,15,1);
+*** WARNING C188 IN LINE 102 OF main.c: 'parameter 1': value truncated
+  103   2                                      break;
+  104   2                                      case 6:
+  105   2                                                      interim_array_signal=array_signal[count];
+  106   2                                              interim=judge(interim_array_signal);
+  107   2                                              signaldisplay((xstart+interim),53,5,15,15,1);
+*** WARNING C188 IN LINE 107 OF main.c: 'parameter 1': value truncated
+  108   2                                      break;
+  109   2                                      case 7:
+  110   2                                                      interim_array_signal=array_signal[count];
+  111   2                                              interim=judge(interim_array_signal);
+  112   2                                              signaldisplay((xstart+interim),61,5,15,15,1);
+*** WARNING C188 IN LINE 112 OF main.c: 'parameter 1': value truncated
+  113   2                                      break;
+  114   2                                      
+  115   2                              }
+  116   1      }
+  117          void main()
+  118          { 
+  119   1              EAXFR=1;
+  120   1              CKCON=0X00;
+  121   1              WTST=0X00;
+  122   1              
+  123   1              IT0 = 1;      
+  124   1              EX0 = 1;      //打开外部中断1
+  125   1              EA=1;
+  126   1              
+  127   1              P4M0 = 0xff;
+  128   1              P4M1 = 0x00;
+  129   1              //P7M0 = 0x00; P7M1 = 0x00; 
+  130   1              P6M0 = 0x00; P6M1 = 0x00; 
+  131   1      
+  132   1      
+  133   1              OLED_Init();
+  134   1              UartInit();     
+  135   1              
+  136   1      
+  137   1              while(1)
+  138   1              {
+  139   2                      if(P70==0)
+  140   2                      {
+  141   3                              delay(4000);
+  142   3                              while(P70==0);
+  143   3                              delay(4000);
+  144   3                              EA=1;
+  145   3                              while(EA==1);
+  146   3                              for(count=0;count<8;count++)
+  147   3                              {
+  148   4                                      judge_1();
+  149   4                              }
+  150   3                      }
+  151   2                      if(P71==0)
+  152   2                      {
+  153   3                              delay(4000);
+  154   3                              while(P71==0);
+  155   3                              xstart++;
+  156   3                              for(count=0;count<8;count++)
+  157   3                              {
+  158   4                                      judge_1();
+  159   4                                      
+  160   4              
+  161   4                              }
+  162   3                      }
+  163   2                      if(P76==0)
+  164   2                      {
+C251 COMPILER V5.60.0,  main                                                               19/07/23  00:24:25  PAGE 4   
+
+  165   3                              delay(4000);
+  166   3                              while(P76==0);
+  167   3                              xstart--;
+  168   3                              for(count=0;count<8;count++)
+  169   3                              {
+  170   4                                      judge_1();
+  171   4              
+  172   4                              }
+  173   3                      }
+  174   2                      
+  175   2                                              
+  176   2                                      
+  177   2              }         
+  178   1      }
+  179          
+  180          void INT0_Routine() interrupt 0
+  181          {
+  182   1              
+  183   1              Delay2us();
+  184   1              array_signal[i]=P6;
+  185   1              i++;
+  186   1              if(i>=8)
+  187   1              {
+  188   2                      i=0;
+  189   2                      EA=0;
+  190   2              }
+  191   1              
+  192   1      }
+  193          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =         6     ------
+  ecode size           =      1095     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =        14          3
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =         1     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        31     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  25 WARNING(S),  0 ERROR(S)

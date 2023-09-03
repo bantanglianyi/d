@@ -1,0 +1,77 @@
+C251 COMPILER V5.60.0,  main                                                               13/07/23  23:54:08  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE main.c LARGE INTR2 ROM(HUGE) BROWSE DEBUG PRINT(.\Listings\main.lst) O
+                    -BJECT(.\Objects\main.obj) 
+
+stmt  level    source
+
+    1          #include <STC32G.H>
+    2          #include "MPU6050.H"
+    3          #include "DMP.h"
+    4          #include "stdint.h"
+    5          #include <stdio.h>
+    6          #include "intrins.h"
+    7          #include <math.h>
+    8          #include "usart.h"
+    9          #include "oled.h"
+   10          float Pitch, Roll, Yaw;
+   11          char x_angle[50];
+   12          void main()
+   13          {       
+   14   1              P4M0 = 0xff; P4M1 = 0x00; 
+   15   1              P2M0 = 0x00; P2M1 = 0x00;
+   16   1              
+   17   1              OLED_Init();
+   18   1              MPU6050_DMP_Init();
+   19   1              UartInit();
+   20   1              
+   21   1              while(1)
+   22   1              {
+   23   2                      
+   24   2                      EAXFR = 1;                              // 使能访问XFR
+   25   2                      CKCON = 0x00;                   // 设置外部数据总线为最快
+   26   2                      WTST = 0; 
+   27   2                      
+   28   2                      
+   29   2                      Pitch = asin(-2 * Q[1] * Q[3] + 2 * Q[0]* Q[2])* 57.3;  // pitch
+   30   2                      //Roll  = atan2(2 * Q[2] * Q[3] + 2 * Q[0] * Q[1], -2 * Q[1] * Q[1] - 2 * Q[2]* Q[2] + 1)* 57.3;        // rol
+             -l
+   31   2                      //Yaw   = atan2(2 * (Q[1] * Q[2] + Q[0] * Q[3]), Q[0] * Q[0] + Q[1] * Q[1] - Q[2] * Q[2] - Q[3] * Q[3])
+             - * 57.3;        //yaw
+   32   2                      MPU6050_Refresh_DMP();
+   33   2                      sprintf(x_angle,"%.3f",Pitch);
+   34   2                      OLED_ShowString(0,0,x_angle,8);
+   35   2                      printf("%.3f",x_angle);
+   36   2                      
+   37   2                      
+   38   2              }
+   39   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =    ------     ------
+  ecode size           =       230     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =        62     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+C251 COMPILER V5.60.0,  main                                                               13/07/23  23:54:08  PAGE 2   
+
+  const size           =    ------     ------
+  hconst size          =         5     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

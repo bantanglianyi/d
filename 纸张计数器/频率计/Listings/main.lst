@@ -1,0 +1,127 @@
+C251 COMPILER V5.60.0,  main                                                               02/06/23  17:32:45  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C251\BIN\C251.EXE main.c LARGE INTR2 BROWSE DEBUG PRINT(.\Listings\main.lst) OBJECT(.\Ob
+                    -jects\main.obj) 
+
+stmt  level    source
+
+    1          #include <STC32G.H>
+    2          #include <stdio.h>
+    3          #include "pwm.h"
+    4          #include "oled.h"
+    5          #include "bmp.h"
+    6          float c;
+    7          unsigned char dis_buf[50] = {0};
+    8          bit ssy = 0;
+    9          float TL0_NUM = 0,TH0_NUM = 0,TIME_NUM = 0;
+   10          void Timer0_Isr(void) interrupt 1
+   11          {       
+   12   1      //      c=(((TH1<<8)|TL1)/0.002);
+   13   1      //      c = TH1;
+   14   1      //      TH1=0;
+   15   1      //      TL1=0;
+   16   1              
+   17   1      
+   18   1      }
+   19          
+   20          void Timer0_Init(void)          //2毫秒@11.0592MHz
+   21          {
+   22   1              AUXR |= 0x80;                   //定时器时钟1T模式
+   23   1              TMOD &= 0xF0;                   //设置定时器模式
+   24   1              TL0 = 0x9A;                             //设置定时初始值
+   25   1              TH0 = 0xA9;                             //设置定时初始值
+   26   1              TF0 = 0;                                //清除TF0标志
+   27   1              TR0 = 1;                                //定时器0开始计时
+   28   1              ET0 = 1;                                //使能定时器0中断
+   29   1      }
+   30          
+   31          void ding1_Init()
+   32          {
+   33   1              TMOD|=0X0F;
+   34   1              TMOD&=0X50;
+   35   1              TL1=0;
+   36   1              TH1=0;
+   37   1              TR1=1;
+   38   1      }
+   39          
+   40          void INT0_() interrupt 0
+   41          {
+   42   1              if( ssy == 0)
+   43   1              {
+   44   2                      TR0 = 1;
+   45   2                      ssy = 1;
+   46   2              }
+   47   1              else if(  ssy == 1)
+   48   1              {
+   49   2                      ssy = 0;
+   50   2                      TH0_NUM = TH0;
+   51   2                      TL0_NUM = TL0;
+   52   2                      TR0 = 0;
+   53   2                      TH0 = 0;
+   54   2                      TL0 = 0;
+   55   2              }
+   56   1              
+   57   1      
+   58   1      }
+C251 COMPILER V5.60.0,  main                                                               02/06/23  17:32:45  PAGE 2   
+
+   59          
+   60          
+   61          
+   62          void main()
+   63          {
+   64   1      
+   65   1              EAXFR=1;
+   66   1              CKCON=0X00;
+   67   1              WTST=0X00;
+   68   1          P2M0=0XFF;P2M1=0X00;
+   69   1          P3M0 &= ~0x04; P3M1 |= 0x04; 
+   70   1              P4M0 = 0XFF; P4M1 = 0X00;
+   71   1              IT0 = 1;
+   72   1              EX0 = 1;
+   73   1              //pwm_Init();
+   74   1              OLED_Init();
+   75   1              OLED_ColorTurn(0);
+   76   1              OLED_DisplayTurn(0);
+   77   1      
+   78   1              EA=1;
+   79   1              Timer0_Init();  
+   80   1              ding1_Init();
+   81   1              while(1)
+   82   1              {
+   83   2                      
+   84   2                      c = (float)1/(((TH0_NUM*256 +TL0_NUM)*0.375/12.50785014145031)*0.000001);
+   85   2                      sprintf(dis_buf,"F:%.3f",c);
+   86   2                      OLED_ShowString(0,1,dis_buf,8);
+   87   2      //              OLED_ShowNum(0,4,c,16,16);
+   88   2      
+   89   2              }
+   90   1      }
+   91          
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =      1335     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =        66     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =         1     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =        89     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
